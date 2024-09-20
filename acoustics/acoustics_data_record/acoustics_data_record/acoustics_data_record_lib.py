@@ -8,11 +8,11 @@ class AcousticsDataRecordLib:
     def __init__(self, ROS2_PACKAGE_DIRECTORY=""):
         # Global variables for .csv file manipulation ----------
         # Get the path for the directory where we will store our data
-        self.acoustics_data_directory = ROS2_PACKAGE_DIRECTORY + "acoustics_data/"
+        self.acoustics_data_directory = ROS2_PACKAGE_DIRECTORY + "acoustics_data/"   
 
         timestamp = time.strftime("%Y-%m-%d_%H:%M:%S")
         data_file_name = "acoustics_data_" + timestamp + ".csv"
-        self.data_file_location = self.acoustics_data_directory + data_file_name
+        self.data_file_location = self.acoustics_data_directory + data_file_name     
 
         self.csv_headers = [
             "Time",
