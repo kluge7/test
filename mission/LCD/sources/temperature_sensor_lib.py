@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-! NOTE: 
+! NOTE:
 ! For now we don't have a external sensor to measure internal temerature
 ! Instead we just use Internal Computer temperature sensor to gaugue temperature of teh enviroment aproximately
 ! In the future someone should implement a external temperture sensor for measuting a more acurate state of the temperatuer on the inside of the AUV

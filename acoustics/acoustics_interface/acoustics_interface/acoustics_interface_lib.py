@@ -1,11 +1,8 @@
 # Setting up libraries
-import os
-import sys
-from socket import *
-import netifaces as ni
-from enum import Enum
+from socket import socket, AF_INET, SOCK_DGRAM
 import errno
 import time
+from socket import error
 
 
 class TeensyCommunicationUDP:
@@ -89,8 +86,6 @@ class TeensyCommunicationUDP:
             len(frequenciesOfInterest) == 10
         ), "Frequency list has to have exactly 10 entries"
 
-        _frequenciesOfInterest = frequenciesOfInterest
-
         cls.MY_IP = cls._get_ip()
 
         # Socket setup
@@ -125,7 +120,7 @@ class TeensyCommunicationUDP:
         while True:
             data = cls._get_raw_data()
 
-            if data == None:
+            if data is None:
                 return
 
             if data not in cls.acoustics_data.keys():
@@ -152,7 +147,7 @@ class TeensyCommunicationUDP:
         else:
             data = cls._parse_data_string(is_float=False)
 
-        if data == None:
+        if data is None:
             cls._data_string = ""
             return
 
@@ -249,7 +244,7 @@ class TeensyCommunicationUDP:
                 # Read data
                 message = cls._get_raw_data()
                 # Check if there is no more data left
-                if message == None:
+                if message is None:
                     return False
 
                 # Check if correct signal was sent
@@ -288,5 +283,5 @@ class TeensyCommunicationUDP:
 
                 # print(self.address);
                 cls._clientSocket.sendto(frequency_variance_msg.encode(), cls._address)
-        except:
+        except Exception:
             print("Couldn't send Frequency data")

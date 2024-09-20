@@ -2,14 +2,10 @@
 
 # Libraries for file manipulation
 import os
-import sys
-import ast
 import glob
 
 # Libraries for handling data structures
 import pandas as pd
-import numpy as np
-import array
 
 # Libraries for anmation
 import matplotlib.animation as animation
@@ -141,7 +137,7 @@ def getAcousticsData():
         # Get multilateration data
         tdoaData = convertPandasObjectToFloatArray(latestAcousticsData["TDOA"])
         positonData = convertPandasObjectToFloatArray(latestAcousticsData["Position"])
-    except:
+    except Exception:
         print("ERROR: Coulden't read acoustics data")
 
     # Post process DSP data to desired scale and amount ----------
@@ -167,7 +163,7 @@ def getAcousticsData():
 
         peaksAmplitudeData = tempAmplitude
         peaksFrequencyData = tempFrequency
-    except:
+    except Exception:
         print("ERROR processing DSP data")
 
     # return processed data ----------
