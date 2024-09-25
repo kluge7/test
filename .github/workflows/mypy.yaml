@@ -1,6 +1,9 @@
 name: mypy
 
-on: [push]
+on:
+  push:
+    paths:
+      - '**.py'
 
 jobs:
   mypy:
