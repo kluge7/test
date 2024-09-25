@@ -1,22 +1,26 @@
 name: mypy
 
-on: [pull_request]
+on:
+  pull_request:
+    paths:
+      - '**.py'
+
 jobs:
   mypy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository with full history (or enough depth)
+      # Step 1: Checkout the repository with full history
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetch two commits of history for diff
+          fetch-depth: 0  # Fetch the full history to ensure all commits are available
 
       # Step 2: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'  # Adjust based on your Python version
+          python-version: '3.x'
 
       # Step 3: Install dependencies (including mypy)
       - name: Install dependencies
@@ -27,9 +31,15 @@ jobs:
       # Step 4: Find changed files and run mypy on each, but continue if errors occur
       - name: Run mypy on changed Python files
         run: |
-          # Get the list of changed .py files
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- '*.py')
-          
+          # Check if there's a previous commit to compare
+          if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
+            echo "No previous commit found. Running mypy on all Python files."
+            CHANGED_FILES=$(git ls-files '*.py')
+          else
+            # Get the list of changed .py files between commits
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- '*.py')
+          fi
+
           if [ -z "$CHANGED_FILES" ]; then
             echo "No Python files changed."
             exit 0
@@ -48,6 +58,6 @@ jobs:
           if [ $EXIT_CODE -ne 0 ]; then
             echo "mypy found issues with some files."
             exit $EXIT_CODE
-          else:
+          else
             echo "All files passed mypy checks."
           fi
