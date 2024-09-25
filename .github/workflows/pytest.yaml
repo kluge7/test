@@ -30,12 +30,14 @@ jobs:
         run: |
           rosdep install --from-paths . --ignore-src -r -y
 
-      - name: Set up Python environment
+      - name: Set up Python environment and install pytest
         run: |
-          pip3 install pytest
-
+          sudo apt-get install -y python3-pip  # Ensure pip3 is installed
+          pip3 install pytest                  # Install pytest
+          python3 -m pytest --version          # Check if pytest is installed and display the version
+          
       - name: Run pytest
         env:
           PYTHONPATH: $PYTHONPATH:/opt/ros/humble/lib/python3.10/site-packages
         run: |
-          pytest --maxfail=3 --disable-warnings
+          python3 -m pytest --maxfail=3 --disable-warnings  # Run pytest explicitly via python3
