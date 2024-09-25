@@ -1,10 +1,6 @@
 name: mypy
 
-on:
-  pull_request:
-    paths:
-      - '**.py'
-
+on: [push]
 jobs:
   mypy:
     runs-on: ubuntu-latest
