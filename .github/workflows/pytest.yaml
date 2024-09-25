@@ -1,6 +1,6 @@
 name: pytest
 
-on: [push]
+on: [pull_request]
 
 jobs:
   pytest:
@@ -11,16 +11,31 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Set up Python environment
+      - name: Set up ROS environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip
+          sudo apt-get install -y curl gnupg2 lsb-release
+          curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+          sudo sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
+          sudo apt-get update
+          sudo apt-get install -y ros-humble-desktop python3-rosdep python3-colcon-common-extensions
+          source /opt/ros/humble/setup.sh
+
+      - name: Initialize rosdep
+        run: |
+          sudo rosdep init
+          rosdep update
+
+      - name: Install ROS Python dependencies
+        run: |
+          rosdep install --from-paths src --ignore-src -r -y
+
+      - name: Set up Python environment
+        run: |
           pip3 install pytest
 
-      - name: Install dependencies
-        run: |
-          pip3 install -r requirements.txt
-
       - name: Run pytest
+        env:
+          PYTHONPATH: $PYTHONPATH:/opt/ros/humble/lib/python3.10/site-packages
         run: |
           pytest --maxfail=3 --disable-warnings
