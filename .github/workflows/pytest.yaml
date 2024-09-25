@@ -28,7 +28,7 @@ jobs:
 
       - name: Install ROS Python dependencies
         run: |
-          rosdep install --from-paths src --ignore-src -r -y
+          rosdep install --from-paths . --ignore-src -r -y
 
       - name: Set up Python environment
         run: |
