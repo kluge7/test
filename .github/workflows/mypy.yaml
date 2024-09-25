@@ -1,9 +1,6 @@
 name: mypy
 
-on:
-  pull_request:
-    paths:
-      - '**.py'
+on: [pull_request]
 
 jobs:
   mypy:
@@ -14,7 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetch the full history to ensure all commits are available
+          fetch-depth: 0  # Fetch the full history to ensure all files are available
 
       # Step 2: Set up Python
       - name: Set up Python
@@ -28,36 +25,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install mypy  # Or install from requirements.txt if needed
 
-      # Step 4: Find changed files and run mypy on each, but continue if errors occur
-      - name: Run mypy on changed Python files
+      # Step 4: Run mypy recursively on all Python files
+      - name: Run mypy on all Python files
         run: |
-          # Check if there's a previous commit to compare
-          if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
-            echo "No previous commit found. Running mypy on all Python files."
-            CHANGED_FILES=$(git ls-files '*.py')
-          else
-            # Get the list of changed .py files between commits
-            CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- '*.py')
-          fi
-
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "No Python files changed."
-            exit 0
-          fi
-
-          # Initialize a variable to collect exit codes
-          EXIT_CODE=0
-
-          # Loop through each changed file and run mypy on it
-          for file in $CHANGED_FILES; do
-            echo "Running mypy on $file"
-            mypy "$file" || EXIT_CODE=$?  # Collect the exit code of mypy
-          done
-
-          # Exit with the collected exit code at the end
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "mypy found issues with some files."
-            exit $EXIT_CODE
-          else
-            echo "All files passed mypy checks."
-          fi
+          # Find all Python files in the repo and run mypy on them
+          echo "Running mypy recursively on all Python files..."
+          mypy .
