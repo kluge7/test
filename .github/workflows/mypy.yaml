@@ -1,10 +1,7 @@
-name: Run mypy on Changed Files
+name: mypy
 
 on:
   pull_request:
-    paths:
-      - '**.py'
-  push:
     paths:
       - '**.py'
 
@@ -31,10 +28,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install mypy  # Or install from requirements.txt if needed
 
-      # Step 4: Find changed files and run mypy
+      # Step 4: Find changed files and run mypy on each, but continue if errors occur
       - name: Run mypy on changed Python files
         run: |
-          # Get the list of changed files
+          # Get the list of changed .py files
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- '*.py')
           
           if [ -z "$CHANGED_FILES" ]; then
@@ -42,8 +39,19 @@ jobs:
             exit 0
           fi
 
-          # Run mypy on each changed Python file
+          # Initialize a variable to collect exit codes
+          EXIT_CODE=0
+
+          # Loop through each changed file and run mypy on it
           for file in $CHANGED_FILES; do
             echo "Running mypy on $file"
-            mypy "$file"
+            mypy "$file" || EXIT_CODE=$?  # Collect the exit code of mypy
           done
+
+          # Exit with the collected exit code at the end
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "mypy found issues with some files."
+            exit $EXIT_CODE
+          else:
+            echo "All files passed mypy checks."
+          fi
