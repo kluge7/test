@@ -2,10 +2,12 @@
 import time
 import csv
 from datetime import datetime
+from typing import List  # To define the type of lists
+
 ##
 
 class AcousticsDataRecordLib:
-    def __init__(self, ROS2_PACKAGE_DIRECTORY=""):
+    def __init__(self, ROS2_PACKAGE_DIRECTORY: str = "") -> None:
         # Global variables for .csv file manipulation ----------
         # Get the path for the directory where we will store our data
         self.acoustics_data_directory = ROS2_PACKAGE_DIRECTORY + "acoustics_data/"   
@@ -28,7 +30,7 @@ class AcousticsDataRecordLib:
             "Position",
         ]
 
-        # Make new .csv file for loging blackbox data ----------
+        # Make new .csv file for logging blackbox data ----------
         with open(self.data_file_location, mode="w", newline="") as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(self.csv_headers)
@@ -36,18 +38,18 @@ class AcousticsDataRecordLib:
     # Methods for external uses ----------
     def log_data_to_csv_file(
         self,
-        hydrophone1=[0],
-        hydrophone2=[0],
-        hydrophone3=[0],
-        hydrophone4=[0],
-        hydrophone5=[0],
-        filter_response=[0],
-        fft=[0],
-        peaks=[0],
-        tdoa=[0.0],
-        position=[0.0],
-    ):
-        # Get current time in hours, minutes, seconds and miliseconds
+        hydrophone1: List[int] = [0],
+        hydrophone2: List[int] = [0],
+        hydrophone3: List[int] = [0],
+        hydrophone4: List[int] = [0],
+        hydrophone5: List[int] = [0],
+        filter_response: List[int] = [0],
+        fft: List[int] = [0],
+        peaks: List[int] = [0],
+        tdoa: List[float] = [0.0],
+        position: List[float] = [0.0],
+    ) -> None:
+        # Get current time in hours, minutes, seconds, and milliseconds
         current_time = datetime.now().strftime("%H:%M:%S.%f")[:-3]
 
         # Write to .csv file
