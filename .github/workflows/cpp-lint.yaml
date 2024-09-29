@@ -1,7 +1,6 @@
 name: C++ Linter Pipeline
 
-on: 
-  pull_request:
+on: [push]
 
 jobs:
   # First job: Run clang-format linter
