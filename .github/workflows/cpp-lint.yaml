@@ -4,8 +4,35 @@ on:
   pull_request:
 
 jobs:
+  # First job: Run clang-format linter
+  clang_format_linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run clang-format linter
+        uses: DoozyX/clang-format-lint-action@v0.18.1
+        with:
+          source: "."  # Lint the whole repository
+          exclude: "./lib"  # Exclude the lib directory
+          extensions: "h,cpp,c"  # Include header and C++ files
+          clangFormatVersion: 18
+          inplace: true  # Automatically format the files
+
+      - name: Commit clang-format changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Clang Robot
+          author_email: robot@example.com
+          message: "Committing clang-format changes"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Second job: Run C++ linter (cpp-linter)
   cpp_linter_job:
     runs-on: ubuntu-latest
+    needs: clang_format_linter  # This ensures the cpp-linter runs after clang-format
 
     steps:
       - name: Checkout repository
