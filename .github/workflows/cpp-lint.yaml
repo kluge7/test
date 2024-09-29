@@ -1,39 +1,19 @@
-name: Linting Workflow
+name: Clang-tidy
 
-on: 
-  pull_request:
-  push:
+on: [push]
 
 jobs:
-  # Job 1: Run clang-format Linter
-  clang_format:
+  checkout-and-check-formatting:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: DoozyX/clang-format-lint-action@v0.18.1
-        with:
-          source: "."
-          exclude: "./lib"
-          extensions: "h,cpp,c"
-          clangFormatVersion: 18
-          inplace: True
-      - uses: EndBug/add-and-commit@v9
-        with:
-          author_name: Clang Robot
-          author_email: robot@example.com
-          message: "Committing clang-format changes"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # Job 2: Run cpplint Linter (runs after clang-format)
-  cpplint:
-    runs-on: ubuntu-latest
-    needs: clang_format  # This ensures cpplint runs after clang-format
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install cpplint
-        run: sudo pip install cpplint
-      - name: Run cpplint
-        run: find . -name "*.cpp" -o -name "*.h" | xargs cpplint
+    - uses: actions/checkout@v2
+    - name: Run clang-tidy
+      uses: HorstBaerbel/action-clang-tidy@1.2
+      # These are optional (defaults displayed)
+      with:
+        scandir: '.'
+        builddir: 'build'
+        excludedirs: ''
+        extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
+        cmakeoptions: ''
