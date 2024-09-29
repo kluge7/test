@@ -1,15 +1,18 @@
 name: C++ Linter Pipeline
 
-on:
+on: 
   pull_request:
 
 jobs:
-  # First job: Run clang-format linter
+  # First job: Run clang-format linter and commit formatting changes
   clang_format_linter:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout repository on the pull request branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}  # Checkout the pull request branch explicitly
 
       - name: Run clang-format linter
         uses: DoozyX/clang-format-lint-action@v0.18.1
