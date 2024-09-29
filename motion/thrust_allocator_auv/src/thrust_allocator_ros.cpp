@@ -1,12 +1,20 @@
-#include "thrust_allocator_auv/thrust_allocator_ros.hpp"
-#include "thrust_allocator_auv/pseudoinverse_allocator.hpp"
-#include "thrust_allocator_auv/thrust_allocator_utils.hpp"
-#include <vortex_msgs/msg/thruster_forces.hpp>
-
 #include <chrono>
 #include <functional>
 
-using namespace std::chrono_literals;
+#include "thrust_allocator_auv/thrust_allocator_ros.hpp"
+#include "thrust_allocator_auv/pseudoinverse_allocator.hpp"
+#include "thrust_allocator_auv/thrust_allocator_utils.hpp"
+
+#include <vortex_msgs/msg/thruster_forces.hpp>
+
+using std::chrono_literals::operator""ms;
+
+ThrustAllocator::ThrustAllocator()
+    : Node("thrust_allocator_node"),
+      pseudoinverse_allocator_(Eigen::MatrixX)
+
+
+using std::chrono_literals::operator""ms;
 
 ThrustAllocator::ThrustAllocator()
     : Node("thrust_allocator_node"),
@@ -86,9 +94,9 @@ void ThrustAllocator::wrench_cb(const geometry_msgs::msg::Wrench &msg) {
   msg_vector(0) = msg.force.x;  // surge
   msg_vector(1) = msg.force.y;  // sway
   msg_vector(2) = msg.force.z;  // heave
-  msg_vector(3) = msg.torque.x; // roll
-  msg_vector(4) = msg.torque.y; // pitch
-  msg_vector(5) = msg.torque.z; // yaw
+  msg_vector(3) = msg.torque.x;  // roll
+  msg_vector(4) = msg.torque.y;  // pitch
+  msg_vector(5) = msg.torque.z;  // yaw
 
   if (!healthy_wrench(msg_vector)) {
     RCLCPP_ERROR(get_logger(), "ASV wrench vector invalid, ignoring.");
