@@ -36,8 +36,9 @@ jobs:
         with:
           style: 'file'  # Use .clang-format config file
           tidy-checks: '' # Use .clang-tidy config file
-          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
           verbosity: 'debug'  # Increase verbosity to see files being checked
+          file-annotations: true  # Annotate the PR with specific file comments
+
 
       - name: List files to be linted
         run: |
