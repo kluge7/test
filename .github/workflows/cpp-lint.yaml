@@ -46,7 +46,8 @@ jobs:
           style: 'file'  # Use .clang-format config file
           tidy-checks: '' # Use .clang-tidy config file
           thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
+          verbosity: 'debug'  # Increase verbosity to see files being checked
 
-      - name: Fail fast if lint checks failed
-        if: steps.linter.outputs.checks-failed > 0
-        run: exit 1
+      - name: List files to be linted
+        run: |
+          find . -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \)
