@@ -19,15 +19,6 @@ jobs:
           clangFormatVersion: 18
           inplace: true
 
-      - name: Commit clang-format changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          author_name: Clang Robot
-          author_email: robot@example.com
-          message: "Committing clang-format changes"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   # Second job: Run cpp-linter, depends on clang-format linter completion
   cpp_linter_job:
     runs-on: ubuntu-latest
