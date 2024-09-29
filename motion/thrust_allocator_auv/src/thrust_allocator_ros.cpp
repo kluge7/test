@@ -8,7 +8,7 @@
 
 using namespace std::chrono_literals;
 
-ThrustAllocator::ThrustAllocator()
+ThrustAllocator::ThrustAllocator()            // asda dwa
     : Node("thrust_allocator_node"),
       pseudoinverse_allocator_(Eigen::MatrixXd::Zero(6, 8)) {
   declare_parameter("physical.center_of_mass", std::vector<double>{0});

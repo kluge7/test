@@ -1,0 +1,22 @@
+name: C++ Linter Pipeline
+
+on: [pull_request]
+
+jobs:
+  cpp_linter_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run C++ Linter (cpp-linter)
+        uses: cpp-linter/cpp-linter-action@v2
+        id: linter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          style: 'file' 
+          tidy-checks: '' # Use .clang-tidy config file
+          thread-comments: false  # Disables the thread comments
+          file-annotations: true  # Enables file annotations on specific lines with issues
