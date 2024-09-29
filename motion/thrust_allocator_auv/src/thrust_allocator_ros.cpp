@@ -11,7 +11,7 @@ using std::chrono_literals::operator""ms;
 
 ThrustAllocator::ThrustAllocator()
     : Node("thrust_allocator_node"),
-      pseudoinverse_allocator_(Eigen::MatrixX)       // Incorrect indentation and extra spaces
+      pseudoinverse_allocator_(Eigen::MatrixX)          // Incorrect indentation and extra spaces
 
       using std::chrono_literals::operator""ms;
 
