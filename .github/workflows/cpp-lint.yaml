@@ -1,6 +1,6 @@
 name: C++ Linter Pipeline
 
-on: [push]
+on: [pull_request]
 
 jobs:
   cpp_linter_job:
