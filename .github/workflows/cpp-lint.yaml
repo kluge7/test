@@ -1,6 +1,7 @@
 name: C++ Linter Pipeline
 
-on: [pull_request]
+on:
+  pull_request:
 
 jobs:
   cpp_linter_job:
@@ -10,13 +11,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Run the C++ linter (cpp-linter) with file annotations and thread comments
       - name: Run C++ Linter (cpp-linter)
         uses: cpp-linter/cpp-linter-action@v2
         id: linter
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          style: 'file' 
-          tidy-checks: '' # Use .clang-tidy config file
-          thread-comments: false  # Disables the thread comments
-          file-annotations: true  # Enables file annotations on specific lines with issues
+          style: 'file'  # Use the .clang-format config file from the repo
+          tidy-checks: '' # Use the .clang-tidy config file from the repo
+          file-annotations: true  # Enable file annotations on specific lines with issues
+          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}  # Use thread comments for PR feedback
+
+      # Fail fast if any lint checks failed
+      - name: Fail fast if lint checks failed
+        if: steps.linter.outputs.checks-failed > 0
+        run: exit 1
