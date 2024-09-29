@@ -23,7 +23,13 @@ jobs:
           clangFormatVersion: 18
           inplace: true  # Automatically format the files
 
-      - name: Commit clang-format changes
+      - name: Check if there are changes
+        id: git_diff
+        run: |
+          git diff --exit-code || echo "changes"
+
+      - name: Commit clang-format changes if necessary
+        if: steps.git_diff.outputs.result == 'changes'
         uses: EndBug/add-and-commit@v9
         with:
           author_name: Clang Robot
@@ -32,10 +38,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check for new commit and exit if found
+        if: steps.git_diff.outputs.result == 'changes'
+        run: exit 0
+
   # Second job: Run C++ linter (cpp-linter)
   cpp_linter_job:
     runs-on: ubuntu-latest
-    needs: clang_format_linter  # This ensures the cpp-linter runs after clang-format
+    needs: clang_format_linter
 
     steps:
       - name: Checkout repository on the updated branch
