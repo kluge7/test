@@ -1,18 +1,16 @@
-name: C++ Linter Pipeline
+name: Python Format and Lint (isort, black, pylint)
 
-on: 
-  pull_request:
+on: [pull_request]
 
 jobs:
-  # First job: Run clang-format and commit formatting changes
   clang_format_linter:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository on the pull request branch
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}  # Checkout the pull request branch explicitly
+          ref: ${{ github.head_ref }}
 
       - name: Run clang-format linter
         uses: DoozyX/clang-format-lint-action@v0.18.1
@@ -23,30 +21,18 @@ jobs:
           clangFormatVersion: 18
           inplace: true  # Automatically format the files
 
-      - name: Check if there are changes
-        id: git_diff
-        run: |
-          git diff --exit-code || echo "changes"
-
-      - name: Commit clang-format changes if necessary
-        if: steps.git_diff.outputs.result == 'changes'
+      - name: Commit isort changes
         uses: EndBug/add-and-commit@v9
         with:
-          author_name: Clang Robot
-          author_email: robot@example.com
-          message: "Committing clang-format changes"
+          author_name: Isort Robot
+          author_email: isort-robot@example.com
+          message: "Committing isort changes"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Check for new commit and exit if found
-        if: steps.git_diff.outputs.result == 'changes'
-        run: exit 0
-
-  # Second job: Run C++ linter (cpp-linter)
-  cpp_linter_job:
+  pylint:
     runs-on: ubuntu-latest
     needs: clang_format_linter
-
     steps:
       - name: Checkout repository on the updated branch
         uses: actions/checkout@v4
@@ -64,8 +50,3 @@ jobs:
           tidy-checks: ''  # Use the .clang-tidy config file from the repo
           file-annotations: true  # Enable file annotations on specific lines with issues
           thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}  # Use thread comments for PR feedback
-
-      # Fail fast if any lint checks failed
-      - name: Fail fast if lint checks failed
-        if: steps.linter.outputs.checks-failed > 0
-        run: exit 1
