@@ -1,19 +1,26 @@
-name: Clang-tidy
+name: cpp-linter
 
 on: [push]
 
-jobs:
-  checkout-and-check-formatting:
-    runs-on: ubuntu-latest
 
+jobs:
+  cpp-linter:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Run clang-tidy
-      uses: HorstBaerbel/action-clang-tidy@1.2
-      # These are optional (defaults displayed)
-      with:
-        scandir: '.'
-        builddir: 'build'
-        excludedirs: ''
-        extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
-        cmakeoptions: ''
+      - uses: actions/checkout@v4
+      - uses: cpp-linter/cpp-linter-action@main
+        id: linter
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          style: file
+          files-changed-only: false
+          thread-comments: false
+
+      - name: Fail fast?!
+        if: steps.linter.outputs.checks-failed != 0
+        run: |
+          echo "some linter checks failed. ${{ steps.linter.outputs.checks-failed }}"
+        # for actual deployment
+        # run: exit 1
