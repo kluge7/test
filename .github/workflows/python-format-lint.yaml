@@ -16,6 +16,15 @@ jobs:
       - name: Run isort to sort imports
         uses: isort/isort-action@v1
 
+      - name: Commit isort changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Isort Robot
+          author_email: isort-robot@example.com
+          message: "Committing isort changes"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   black:
     runs-on: ubuntu-latest
     needs: isort
@@ -30,6 +39,15 @@ jobs:
         id: action_black
         with:
           black_args: "."
+
+      - name: Commit black-format changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Black Robot
+          author_email: black-robot@example.com
+          message: "Committing black-format changes"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   pylint:
     runs-on: ubuntu-latest
