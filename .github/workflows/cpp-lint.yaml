@@ -1,6 +1,6 @@
 name: Python Format and Lint (isort, black, pylint)
 
-on: [pull_request]
+on: []
 
 jobs:
   clang_format_linter:
@@ -15,11 +15,11 @@ jobs:
       - name: Run clang-format linter
         uses: DoozyX/clang-format-lint-action@v0.18.1
         with:
-          source: "."  # Lint the whole repository
-          exclude: "./lib"  # Exclude the lib directory
-          extensions: "h,cpp,c"  # Include header and C++ files
+          source: "." # Lint the whole repository
+          exclude: "./lib" # Exclude the lib directory
+          extensions: "h,cpp,c" # Include header and C++ files
           clangFormatVersion: 18
-          inplace: true  # Automatically format the files
+          inplace: true # Automatically format the files
 
   pylint:
     runs-on: ubuntu-latest
@@ -28,7 +28,7 @@ jobs:
       - name: Checkout repository on the updated branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}  # Ensure it's the updated branch
+          ref: ${{ github.head_ref }} # Ensure it's the updated branch
 
       # Run the C++ linter (cpp-linter) with file annotations and thread comments
       - name: Run C++ Linter (cpp-linter)
@@ -37,7 +37,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          style: 'file'  # Use the .clang-format config file from the repo
-          tidy-checks: ''  # Use the .clang-tidy config file from the repo
-          file-annotations: true  # Enable file annotations on specific lines with issues
-          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}  # Use thread comments for PR feedback
+          style: "file" # Use the .clang-format config file from the repo
+          tidy-checks: "" # Use the .clang-tidy config file from the repo
+          file-annotations: true # Enable file annotations on specific lines with issues
+          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }} # Use thread comments for PR feedback

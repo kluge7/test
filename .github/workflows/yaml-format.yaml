@@ -1,6 +1,6 @@
 name: Yaml Format (prettier)
 
-on: [pull_request]
+on: []
 
 jobs:
   prettier:

@@ -1,6 +1,6 @@
 name: Python Format and Lint (isort, black, pylint)
 
-on: [pull_request]
+on: []
 
 jobs:
   isort:
