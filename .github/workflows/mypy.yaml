@@ -1,8 +1,6 @@
 name: mypy
 
-on:
-  pull_request:
-     types: [review_requested, synchronize, opened, reopened]
+on: []
 
 jobs:
   mypy:

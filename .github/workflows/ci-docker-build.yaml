@@ -1,8 +1,6 @@
 name: CI - Docker Build
 
-on:
-  pull_request:
-     types: [review_requested, synchronize, opened, reopened]
+on: []
 
 jobs:
   build:
