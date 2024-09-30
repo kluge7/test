@@ -1,10 +1,8 @@
 name: Validation Tools
 
 on:
-  workflow_run:
-    workflows: ["Formatting Tools"]  # This matches the name of the formatting workflow
-    types:
-      - completed
+ pull_request:
+    types: [review_requested, edited]
 
 jobs:
   validate:
