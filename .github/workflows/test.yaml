@@ -2,7 +2,7 @@ name: Validation Tools
 
 on:
  pull_request:
-    types: [review_requested, edited]
+    types: [review_requested, synchronize, opened, reopened]
 
 jobs:
   validate:
