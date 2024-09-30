@@ -1,6 +1,5 @@
 name: Validation Tools
 
-# Trigger this workflow only after the Formatting Tools workflow has completed successfully
 on:
   workflow_run:
     workflows: ["Formatting Tools"]  # This matches the name of the formatting workflow
@@ -8,13 +7,13 @@ on:
       - completed
 
 jobs:
-  mypy:
+  validate:
     runs-on: ubuntu-latest
     steps:
       # Checkout the repository code after formatting has been applied
       - uses: actions/checkout@v2
 
-      # Install mypy and run type checking
+      # Install mypy and run type checking (or any other validation)
       - name: Install mypy and dependencies
         run: |
           sudo apt-get update

@@ -1,16 +1,16 @@
 name: Formatting Tools
 
-# Trigger on pull requests
 on: [pull_request]
 
 jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the repository and ensure we are on the correct branch (not a detached HEAD)
+      # Checkout the repository code
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.head_ref }}  # Ensure we're on the branch the PR is targeting
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       # Run clang-format to check and fix C/C++ code formatting
       - uses: DoozyX/clang-format-lint-action@v0.18.1
@@ -22,7 +22,8 @@ jobs:
           inplace: True
 
       # Commit clang-format changes if needed
-      - uses: EndBug/add-and-commit@v9
+      - name: Commit clang-format changes
+        uses: EndBug/add-and-commit@v9
         with:
           author_name: Clang Robot
           author_email: robot@example.com
@@ -38,7 +39,8 @@ jobs:
           codespell -w .
 
       # Commit codespell changes if needed
-      - uses: EndBug/add-and-commit@v9
+      - name: Commit codespell fixes
+        uses: EndBug/add-and-commit@v9
         with:
           author_name: Codespell Robot
           author_email: codespell-robot@example.com
