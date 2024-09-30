@@ -1,6 +1,6 @@
 name: Python Format and Lint (isort, black, pylint)
 
-on: [push]
+on: [pull_request]
 
 jobs:
   clang_format_linter:
@@ -20,15 +20,6 @@ jobs:
           extensions: "h,cpp,c"  # Include header and C++ files
           clangFormatVersion: 18
           inplace: true  # Automatically format the files
-
-      - name: Commit isort changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          author_name: Isort Robot
-          author_email: isort-robot@example.com
-          message: "Committing isort changes"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   pylint:
     runs-on: ubuntu-latest
