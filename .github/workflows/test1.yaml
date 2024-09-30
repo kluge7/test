@@ -7,9 +7,11 @@ jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the repository code
+      # Checkout the repository and ensure we are on the correct branch (not a detached HEAD)
       - uses: actions/checkout@v2
-      
+        with:
+          ref: ${{ github.head_ref }}  # Ensure we're on the branch the PR is targeting
+
       # Run clang-format to check and fix C/C++ code formatting
       - uses: DoozyX/clang-format-lint-action@v0.18.1
         with:
