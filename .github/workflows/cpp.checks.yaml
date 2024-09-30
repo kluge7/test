@@ -1,0 +1,27 @@
+name: C++ Checks
+
+on: [pull_request]
+
+jobs:
+  cpp-linter:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v4
+
+      # Run C++ linter with clang-tidy and clang-format
+      - uses: cpp-linter/cpp-linter-action@v2
+        id: linter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required for posting comments in PRs
+        with:
+          style: "file" # Use .clang-format config file if available
+          tidy-checks: "" # Use .clang-tidy config file if available
+          file-annotations: "true" # Annotate the file with clang-tidy warnings
+          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }} # Post or update a comment in PR thread with results
+
+      # Fail fast if any checks failed
+      - name: Fail fast if any linter checks failed
+        if: steps.linter.outputs.checks-failed > 0
+        run: exit 1

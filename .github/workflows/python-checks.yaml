@@ -59,7 +59,7 @@ jobs:
       - name: Run bandit scan
         run: |
           bandit -c pyproject.toml -r . --severity-level medium
-  
+
   mypy:
     runs-on: ubuntu-latest
 

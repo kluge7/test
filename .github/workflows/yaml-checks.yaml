@@ -1,6 +1,6 @@
-name: Yaml Format (prettier)
+name: Yaml Checks
 
-on: []
+on: [pull_request]
 
 jobs:
   prettier:
