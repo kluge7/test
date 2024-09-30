@@ -9,9 +9,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Set environment variable
-    set_env_var = SetEnvironmentVariable(
-        name="ROSCONSOLE_FORMAT", value="[${severity}] [${time}] [${node}]: ${message}"
-    )
+    set_env_var = SetEnvironmentVariable(name="ROSCONSOLE_FORMAT", value="[${severity}] [${time}] [${node}]: ${message}")
 
     # Joystick node
     joy_node = Node(

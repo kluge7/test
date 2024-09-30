@@ -78,9 +78,7 @@ class LCDScreenDriver:
 
         # Display sequence
         steps = 20
-        for a in range(
-            steps
-        ):  # Increase range to allow characters to exit screen completely
+        for a in range(steps):  # Increase range to allow characters to exit screen completely
             self._LCD.clear()
 
             # Pac-Man position and animation
@@ -93,9 +91,7 @@ class LCDScreenDriver:
                     self._LCD.write_string(chr(1))  # Mouth closed
 
             # Ghost position and animation
-            if (
-                3 < a < steps + 4
-            ):  # Start later and continue until the ghost is off-screen
+            if 3 < a < steps + 4:  # Start later and continue until the ghost is off-screen
                 ghost_pos = (0, a - 4)  # Maintain spacing
                 self._LCD.cursor_pos = ghost_pos
                 self._LCD.write_string(chr(2))
@@ -110,9 +106,7 @@ class LCDScreenDriver:
 
         # Display sequence
         steps = 26
-        for a in range(
-            steps + 4
-        ):  # Adjusted range to ensure all characters exit screen
+        for a in range(steps + 4):  # Adjusted range to ensure all characters exit screen
             self._LCD.clear()
 
             # Ghost position and animation
@@ -123,9 +117,7 @@ class LCDScreenDriver:
                 self._LCD.write_string(chr(2))
 
             # Pac-Man position and animation
-            pac_man_start_pos = (
-                ghost_start_pos + 4
-            )  # Starts 4 positions to the right of the ghost initially
+            pac_man_start_pos = ghost_start_pos + 4  # Starts 4 positions to the right of the ghost initially
             pac_man_current_pos = pac_man_start_pos - a
             if 0 <= pac_man_current_pos < 16:
                 self._LCD.cursor_pos = (1, pac_man_current_pos)

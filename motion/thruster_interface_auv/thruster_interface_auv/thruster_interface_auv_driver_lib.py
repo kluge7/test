@@ -49,9 +49,7 @@ class ThrusterInterfaceAUVDriver:
             self.SYSTEM_OPERATIONAL_VOLTAGE = 20
 
         # Get the full path to the ROS2 package this file is located at
-        self.ROS2_PACKAGE_NAME_FOR_THRUSTER_DATASHEET = (
-            ROS2_PACKAGE_NAME_FOR_THRUSTER_DATASHEET
-        )
+        self.ROS2_PACKAGE_NAME_FOR_THRUSTER_DATASHEET = ROS2_PACKAGE_NAME_FOR_THRUSTER_DATASHEET
 
     def _interpolate_forces_to_pwm(self, thruster_forces_array):
         """
@@ -120,19 +118,14 @@ class ThrusterInterfaceAUVDriver:
         """
 
         # Apply thruster mapping and direction
-        thruster_forces_array = [
-            thruster_forces_array[i] * self.THRUSTER_DIRECTION[i]
-            for i in self.THRUSTER_MAPPING
-        ]
+        thruster_forces_array = [thruster_forces_array[i] * self.THRUSTER_DIRECTION[i] for i in self.THRUSTER_MAPPING]
 
         # Convert Forces to PWM
         thruster_pwm_array = self._interpolate_forces_to_pwm(thruster_forces_array)
 
         # Apply thruster offset
         for ESC_channel, thruster_pwm in enumerate(thruster_pwm_array):
-            thruster_pwm_array[ESC_channel] = (
-                thruster_pwm + self.THRUSTER_PWM_OFFSET[ESC_channel]
-            )
+            thruster_pwm_array[ESC_channel] = thruster_pwm + self.THRUSTER_PWM_OFFSET[ESC_channel]
 
         # Apply thruster offset and limit PWM if needed
         for ESC_channel in range(len(thruster_pwm_array)):

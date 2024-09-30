@@ -17,13 +17,9 @@ from std_msgs.msg import Float32MultiArray, Int32MultiArray
 class AcousticsDataRecordNode(Node):
     def __init__(self):
         # Variables for seting upp loging correctly
-        hydrophoneDataSize = (
-            2**10
-        ) * 3  # 1 hydrophone buffer is 2^10 long, Each hydrophone data has 3 buffers full of this data
+        hydrophoneDataSize = (2**10) * 3  # 1 hydrophone buffer is 2^10 long, Each hydrophone data has 3 buffers full of this data
         DSPDataSize = 2**10  # DSP (Digital Signal Processing) has 2^10 long data
-        TDOADataSize = (
-            5  # TDOA (Time Difference Of Arrival) has 5 hydrophones it has times for
-        )
+        TDOADataSize = 5  # TDOA (Time Difference Of Arrival) has 5 hydrophones it has times for
         positionDataSize = 3  # position only has X, Y, Z basicaly 3 elements
 
         # Initialize ROS2 node
@@ -31,29 +27,19 @@ class AcousticsDataRecordNode(Node):
 
         # Initialize Subscribers ----------
         # Start listening to Hydrophone data
-        self.subscriberHydrophone1 = self.create_subscription(
-            Int32MultiArray, "/acoustics/hydrophone1", self.hydrophone1_callback, 5
-        )
+        self.subscriberHydrophone1 = self.create_subscription(Int32MultiArray, "/acoustics/hydrophone1", self.hydrophone1_callback, 5)
         self.hydropone1Data = array.array("i", [0] * hydrophoneDataSize)
 
-        self.subscriberHydrophone2 = self.create_subscription(
-            Int32MultiArray, "/acoustics/hydrophone2", self.hydrophone2_callback, 5
-        )
+        self.subscriberHydrophone2 = self.create_subscription(Int32MultiArray, "/acoustics/hydrophone2", self.hydrophone2_callback, 5)
         self.hydropone2Data = array.array("i", [0] * hydrophoneDataSize)
 
-        self.subscriberHydrophone3 = self.create_subscription(
-            Int32MultiArray, "/acoustics/hydrophone3", self.hydrophone3_callback, 5
-        )
+        self.subscriberHydrophone3 = self.create_subscription(Int32MultiArray, "/acoustics/hydrophone3", self.hydrophone3_callback, 5)
         self.hydropone3Data = array.array("i", [0] * hydrophoneDataSize)
 
-        self.subscriberHydrophone4 = self.create_subscription(
-            Int32MultiArray, "/acoustics/hydrophone4", self.hydrophone4_callback, 5
-        )
+        self.subscriberHydrophone4 = self.create_subscription(Int32MultiArray, "/acoustics/hydrophone4", self.hydrophone4_callback, 5)
         self.hydropone4Data = array.array("i", [0] * hydrophoneDataSize)
 
-        self.subscriberHydrophone5 = self.create_subscription(
-            Int32MultiArray, "/acoustics/hydrophone5", self.hydrophone5_callback, 5
-        )
+        self.subscriberHydrophone5 = self.create_subscription(Int32MultiArray, "/acoustics/hydrophone5", self.hydrophone5_callback, 5)
         self.hydropone5Data = array.array("i", [0] * hydrophoneDataSize)
 
         # Start listening to DSP (Digital Signal Processing) data
@@ -65,14 +51,10 @@ class AcousticsDataRecordNode(Node):
         )
         self.filterResponseData = array.array("i", [0] * DSPDataSize)
 
-        self.subscriberFFT = self.create_subscription(
-            Int32MultiArray, "/acoustics/fft", self.fft_callback, 5
-        )
+        self.subscriberFFT = self.create_subscription(Int32MultiArray, "/acoustics/fft", self.fft_callback, 5)
         self.FFTData = array.array("i", [0] * DSPDataSize)
 
-        self.subscriberPeaks = self.create_subscription(
-            Int32MultiArray, "/acoustics/peaks", self.peaks_callback, 5
-        )
+        self.subscriberPeaks = self.create_subscription(Int32MultiArray, "/acoustics/peaks", self.peaks_callback, 5)
         self.peaksData = array.array("i", [0] * DSPDataSize)
 
         # Start listening to Multilateration data
@@ -84,38 +66,23 @@ class AcousticsDataRecordNode(Node):
         )
         self.TDOAData = array.array("f", [0.0] * TDOADataSize)
 
-        self.subscriberPositionResponse = self.create_subscription(
-            Float32MultiArray, "/acoustics/position", self.position_callback, 5
-        )
+        self.subscriberPositionResponse = self.create_subscription(Float32MultiArray, "/acoustics/position", self.position_callback, 5)
         self.positionData = array.array("f", [0.0] * positionDataSize)
 
         # Initialize logger ----------
         # Get package directory location
-        ros2_package_directory_location = get_package_share_directory(
-            "acoustics_data_record"
-        )
+        ros2_package_directory_location = get_package_share_directory("acoustics_data_record")
+        ros2_package_directory_location = ros2_package_directory_location + "/../../../../"  # go back to workspace
         ros2_package_directory_location = (
-            ros2_package_directory_location + "/../../../../"
-        )  # go back to workspace
-        ros2_package_directory_location = (
-            ros2_package_directory_location
-            + "src/vortex-auv/acoustics/acoustics_data_record/"
+            ros2_package_directory_location + "src/vortex-auv/acoustics/acoustics_data_record/"
         )  # Navigate to this package
 
         # Make blackbox loging file
-        self.acoustics_data_record = AcousticsDataRecordLib(
-            ROS2_PACKAGE_DIRECTORY=ros2_package_directory_location
-        )
+        self.acoustics_data_record = AcousticsDataRecordLib(ROS2_PACKAGE_DIRECTORY=ros2_package_directory_location)
 
         # Logs all the newest data 1 time(s) per second
-        self.declare_parameter(
-            "acoustics.data_logging_rate", 1.0
-        )  # Providing a default value 1.0 => 1 samplings per second, verry slow
-        DATA_LOGING_RATE = (
-            self.get_parameter("acoustics.data_logging_rate")
-            .get_parameter_value()
-            .double_value
-        )
+        self.declare_parameter("acoustics.data_logging_rate", 1.0)  # Providing a default value 1.0 => 1 samplings per second, verry slow
+        DATA_LOGING_RATE = self.get_parameter("acoustics.data_logging_rate").get_parameter_value().double_value
         timer_period = 1.0 / DATA_LOGING_RATE
         self.logger_timer = self.create_timer(timer_period, self.logger)
 

@@ -81,9 +81,7 @@ class TeensyCommunicationUDP:
         Parameters:
             frequenciesOfInterest (list[tuple[int, int]]): List of frequencies to look for
         """
-        assert (
-            len(frequenciesOfInterest) == 10
-        ), "Frequency list has to have exactly 10 entries"
+        assert len(frequenciesOfInterest) == 10, "Frequency list has to have exactly 10 entries"
 
         cls.MY_IP = cls._get_ip()
 
@@ -261,9 +259,7 @@ class TeensyCommunicationUDP:
             return False
 
     @classmethod
-    def _send_frequencies_of_interest(
-        cls, frequenciesOfInterest: list[tuple[float, float]]
-    ) -> None:
+    def _send_frequencies_of_interest(cls, frequenciesOfInterest: list[tuple[float, float]]) -> None:
         """
         Sends the list of frequencies with variance to teensy
 
@@ -272,9 +268,7 @@ class TeensyCommunicationUDP:
         """
         try:
             # Format (CSV): xxx,x,xx,x...,x (frequency list comes first, then variances)
-            assert (
-                len(frequenciesOfInterest) == 10
-            ), "List of frequencies has to be ten entries long!"
+            assert len(frequenciesOfInterest) == 10, "List of frequencies has to be ten entries long!"
 
             # ten messages in total, one message for each entry to work around the max packet size
             for frequency, variance in frequenciesOfInterest:
