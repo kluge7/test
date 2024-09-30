@@ -1,8 +1,7 @@
 # Setting up libraries
-from socket import socket, AF_INET, SOCK_DGRAM
 import errno
 import time
-from socket import error
+from socket import AF_INET, SOCK_DGRAM, error, socket
 
 
 class TeensyCommunicationUDP:

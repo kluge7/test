@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 # Python Libraries
+import csv
 import os
 import re
 import time
-import csv
 from datetime import datetime, timedelta
+
+
 # sss
 ####
 class BlackBoxLogData:
