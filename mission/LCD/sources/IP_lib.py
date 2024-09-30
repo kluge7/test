@@ -22,9 +22,8 @@ class IPDriver:
 
             # Split by space and get the first IP
             return ip_str.split()[0]
-        
+
         except subprocess.CalledProcessError as e:
             # Handle the error appropriately (e.g., log it or raise an exception)
             print(f"Failed to retrieve IP address: {e}")
             return ""
-
