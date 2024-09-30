@@ -38,9 +38,9 @@ class AcousticsInterfaceNode(Node):
         self._position_publisher = self.create_publisher(Float32MultiArray, "/acoustics/position", 5)
 
         # Logs all the newest data
-        self.declare_parameter("acoustics.data_logging_rate", 1.0)  # Providing a default value 1.0 => 1 samplings per second, verry slow
-        DATA_LOGING_RATE = self.get_parameter("acoustics.data_logging_rate").get_parameter_value().double_value
-        timer_period = 1.0 / DATA_LOGING_RATE
+        self.declare_parameter("acoustics.data_logging_rate", 1.0)  # Providing a default value 1.0 => 1 samplings per second, very slow
+        data_logging_rate = self.get_parameter("acoustics.data_logging_rate").get_parameter_value().double_value
+        timer_period = 1.0 / data_logging_rate
 
         self._timer_data_update = self.create_timer(0.001, self.data_update)
         self._timer_data_publisher = self.create_timer(timer_period, self.data_publisher)
@@ -49,27 +49,33 @@ class AcousticsInterfaceNode(Node):
         # This list has to be exactly 10 entries long (20 elements (10 frequencies + 10 variances))
         # format [(FREQUENCY, FREQUENCY_VARIANCE), ...]
         self.declare_parameter("acoustics.frequencies_of_interest", [0] * 20)
-        FREQUENCIES_OF_INTEREST_PARAMETERS = self.get_parameter("acoustics.frequencies_of_interest").get_parameter_value().integer_array_value
+        frequencies_of_interest_parameters = self.get_parameter("acoustics.frequencies_of_interest").get_parameter_value().integer_array_value
 
-        frequenciesOfInterest = []
-        for i in range(0, len(FREQUENCIES_OF_INTEREST_PARAMETERS), 2):
-            frequenciesOfInterest += [
+        frequencies_of_interest = []
+        for i in range(0, len(frequencies_of_interest_parameters), 2):
+            frequencies_of_interest += [
                 (
-                    FREQUENCIES_OF_INTEREST_PARAMETERS[i],
-                    FREQUENCIES_OF_INTEREST_PARAMETERS[i + 1],
+                    frequencies_of_interest_parameters[i],
+                    frequencies_of_interest_parameters[i + 1],
                 )
             ]
 
-        # Initialize comunication with Acoustics PCB
-        self.get_logger().info("Initializing comunication with Acoustics")
+        # Initialize communication with Acoustics PCB
+        self.get_logger().info("Initializing communication with Acoustics")
         self.get_logger().info("Acoustics PCB MCU IP: 10.0.0.111")
         self.get_logger().info("Trying to connect...")
 
-        TeensyCommunicationUDP.init_communication(frequenciesOfInterest)
+        TeensyCommunicationUDP.init_communication(frequencies_of_interest)
 
-        self.get_logger().info("Sucsefully connected to Acoustics PCB MCU :D")
+        self.get_logger().info("Successfully connected to Acoustics PCB MCU :D")
 
     def data_update(self) -> None:
+        """
+        Fetches data using the TeensyCommunicationUDP class.
+
+        This method calls the fetch_data method from the TeensyCommunicationUDP class
+        to update the data.
+        """
         TeensyCommunicationUDP.fetch_data()
 
     def data_publisher(self) -> None:
@@ -88,7 +94,17 @@ class AcousticsInterfaceNode(Node):
         self._position_publisher.publish(Float32MultiArray(data=TeensyCommunicationUDP.acoustics_data["LOCATION"]))
 
 
-def main(args=None):
+def main(args: list = None) -> None:
+    """
+    Entry point for the acoustics interface node.
+
+    This function initializes the ROS 2 Python client library, creates an instance
+    of the AcousticsInterfaceNode, and starts spinning the node to process callbacks.
+    Once the node is shut down, it destroys the node and shuts down the ROS 2 client library.
+
+    Args:
+        args (list, optional): Command line arguments passed to the ROS 2 client library. Defaults to None.
+    """
     rclpy.init(args=args)
 
     node = AcousticsInterfaceNode()
@@ -97,7 +113,6 @@ def main(args=None):
 
     node.destroy_node()
     rclpy.shutdown()
-    pass
 
 
 if __name__ == "__main__":

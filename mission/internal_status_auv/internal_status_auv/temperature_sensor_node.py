@@ -9,9 +9,9 @@ from std_msgs.msg import Float32
 
 
 class TemperaturePublisher(Node):
-    def __init__(self):
+    def __init__(self) -> None:
         # Pressure sensor setup ----------
-        self.Temperature = internal_status_auv.temperature_sensor_lib.TemperatureSensor()
+        self.temperature = internal_status_auv.temperature_sensor_lib.TemperatureSensor()
 
         # Node setup ----------
         super().__init__("temperature_sensor_publisher")
@@ -31,32 +31,55 @@ class TemperaturePublisher(Node):
         self.logger = get_logger("temperature_sensor")
 
         self.declare_parameter("internal_status.temperature_critical_level", 90.0)
-        self.temperatureCriticalLevel = self.get_parameter("internal_status.temperature_critical_level").get_parameter_value().double_value
+        self.temperature_critical_level = self.get_parameter("internal_status.temperature_critical_level").get_parameter_value().double_value
 
         self.declare_parameter("internal_status.temperature_warning_rate", 0.1)
         warning_rate = self.get_parameter("internal_status.temperature_warning_rate").get_parameter_value().double_value
         warning_timer_period = 1.0 / warning_rate
         self.warning_timer = self.create_timer(warning_timer_period, self.warning_timer_callback)
 
-        # Debuging ----------
+        # Debugging ----------
         self.get_logger().info('"temperature_sensor_publisher" has been started')
 
-    def timer_callback(self):
+    def timer_callback(self) -> None:
+        """
+        Callback function triggered by the main timer.
+
+        This function retrieves the temperature data from the sensor
+        and publishes it to the "/auv/temperature" topic.
+        """
         # Get temperature data
-        self.temperature = self.Temperature.get_temperature()
+        self.temperature = self.temperature.get_temperature()
 
         # Publish temperature data
         temperature_msg = Float32()
         temperature_msg.data = self.temperature
         self.publisher_temperature.publish(temperature_msg)
 
-    def warning_timer_callback(self):
-        # Check if Temperature is abnormal and if so print a warning
-        if self.temperature > self.temperatureCriticalLevel:
+    def warning_timer_callback(self) -> None:
+        """
+        Callback function triggered by the warning timer.
+
+        This function checks if the temperature exceeds the critical level.
+        If so, a fatal warning is logged indicating a possible overheating situation.
+        """
+        if self.temperature > self.temperature_critical_level:
             self.logger.fatal(f"WARNING: Temperature inside the Drone to HIGH: {self.temperature} *C! Drone might be overheating!")
 
 
-def main(args=None):
+def main(args: list = None) -> None:
+    """
+    Main function to initialize and spin the ROS2 node.
+
+    This function initializes the rclpy library, creates an instance of the
+    TemperaturePublisher node, and starts spinning to keep the node running
+    and publishing temperature data.
+
+    Args:
+    -----
+    args : list, optional
+        Arguments passed to the node. Default is None.
+    """
     rclpy.init(args=args)
 
     temperature_publisher = TemperaturePublisher()
