@@ -7,21 +7,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
+      # Step 1: Checkout the repository
       - uses: actions/checkout@v4
 
-      # Run C++ linter with clang-tidy and clang-format
+      # Step 2: Install Eigen3
+      - name: Install Eigen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libeigen3-dev
+
+      # Step 3: Configure and build the project to generate compile_commands.json
+      - name: Build the project
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          make
+
+      # Step 4: Run clang-tidy using the compile_commands.json
       - uses: cpp-linter/cpp-linter-action@v2
         id: linter
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required for posting comments in PRs
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          style: "file" # Use .clang-format config file if available
-          tidy-checks: "" # Use .clang-tidy config file if available
-          file-annotations: "true" # Annotate the file with clang-tidy warnings
-          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }} # Post or update a comment in PR thread with results
+          style: 'file'                          # Use .clang-format config file if available
+          tidy-checks: ''                        # Use .clang-tidy config file if available
+          database: build/compile_commands.json  # Pass the compilation database to clang-tidy
+          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
 
-      # Fail fast if any checks failed
+      # Step 5: Fail fast if any linter checks fail
       - name: Fail fast if any linter checks failed
         if: steps.linter.outputs.checks-failed > 0
         run: exit 1
