@@ -6,6 +6,7 @@ from launch_ros.actions import Node
 
 ###
 
+
 def generate_launch_description():
     joystick_interface_node = Node(
         package="joystick_interface_auv",

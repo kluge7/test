@@ -8,6 +8,7 @@ import os
 import matplotlib.animation as animation
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
+
 # Libraries for handling data structures
 import pandas as pd
 
