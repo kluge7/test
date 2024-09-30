@@ -3,11 +3,8 @@ name: Python Checks
 on: [pull_request]
 
 jobs:
-  python_checks:
+  black:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11", "3.10"]
 
     steps:
       - uses: actions/checkout@v3
@@ -15,27 +12,87 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install black
         run: |
-          python -m pip install black isort bandit[toml] mypy pylint
+          python -m pip install black
 
       - name: Run black
         run: |
           black --check .
 
+  isort:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install isort
+        run: |
+          python -m pip install isort
+
       - name: Run isort
         run: |
           isort --check .
 
-      - name: Run bandit
+  bandit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3
+
+      - name: Install bandit
+        run: |
+          python -m pip install bandit[toml]
+
+      - name: Run bandit scan
         run: |
           bandit -c pyproject.toml -r . --severity-level medium
+  
+  mypy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install mypy
+        run: |
+          python -m pip install mypy
 
       - name: Run mypy
         run: |
           mypy . --explicit-package-bases
+
+  pylint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install pylint
+        run: |
+          python -m pip install pylint
 
       - name: Run pylint
         run: |
