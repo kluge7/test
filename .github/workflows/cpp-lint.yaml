@@ -1,6 +1,8 @@
 name: Python Format and Lint (isort, black, pylint)
 
-on: []
+on:
+  pull_request:
+     types: [review_requested, synchronize, opened, reopened]
 
 jobs:
   clang_format_linter:

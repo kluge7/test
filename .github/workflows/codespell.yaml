@@ -1,6 +1,8 @@
 name: codespell
 
-on: []
+on:
+  pull_request:
+     types: [review_requested, synchronize, opened, reopened]
 
 jobs:
   codespell:
