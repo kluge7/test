@@ -1,27 +1,48 @@
-name: C++ Checks
+name: Linting Pipeline
 
 on: [pull_request]
 
 jobs:
-  cpp-linter:
+  lint:
     runs-on: ubuntu-latest
-
+    env:
+      ROS_DISTRO: foxy  # Adjust ROS 2 distro as needed
     steps:
-      # Checkout the repository
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      # Run C++ linter with clang-tidy and clang-format
-      - uses: cpp-linter/cpp-linter-action@v2
-        id: linter
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required for posting comments in PRs
-        with:
-          style: "file" # Use .clang-format config file if available
-          tidy-checks: "" # Use .clang-tidy config file if available
-          file-annotations: "true" # Annotate the file with clang-tidy warnings
-          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }} # Post or update a comment in PR thread with results
+      - name: Install ROS 2 and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl gnupg lsb-release
+          sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+          sudo sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
+          sudo apt-get update
+          sudo apt-get install -y ros-${ROS_DISTRO}-desktop
+          sudo apt-get install -y python3-pip python3-colcon-common-extensions clang-tidy
+          python3 -m pip install -U colcon-compile-commands
+          sudo rosdep init
+          rosdep update
 
-      # Fail fast if any checks failed
-      - name: Fail fast if any linter checks failed
-        if: steps.linter.outputs.checks-failed > 0
-        run: exit 1
+      - name: Install package dependencies
+        run: |
+          rosdep install --from-paths src --ignore-src -r -y
+
+      - name: Source ROS 2 environment
+        shell: bash -l {0}
+        run: |
+          source /opt/ros/${ROS_DISTRO}/setup.bash
+
+      - name: Build the workspace
+        shell: bash -l {0}
+        run: |
+          colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Merge compile_commands.json files
+        shell: bash -l {0}
+        run: |
+          colcon compile-commands merge
+
+      - name: Run clang-tidy
+        shell: bash -l {0}
+        run: |
+          find . -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' | xargs -P$(nproc) -I{} clang-tidy {} -p .

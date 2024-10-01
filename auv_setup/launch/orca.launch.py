@@ -20,15 +20,15 @@ def generate_launch_description() -> LaunchDescription:
         thruster interface.
     """
     # Set environment variable
-    set_env_var = SetEnvironmentVariable(name="ROSCONSOLE_FORMAT", value="[${severity}] [${time}] [${node}]: ${message}")
+    set_env_var = SetEnvironmentVariable(name='ROSCONSOLE_FORMAT', value='[${severity}] [${time}] [${node}]: ${message}')
 
     # Thruster Allocator launch
     thrust_allocator_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory("thrust_allocator_auv"),
-                "launch",
-                "thrust_allocator_auv.launch.py",
+                get_package_share_directory('thrust_allocator_auv'),
+                'launch',
+                'thrust_allocator_auv.launch.py',
             )
         )
     )
@@ -37,9 +37,9 @@ def generate_launch_description() -> LaunchDescription:
     thruster_interface_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory("thruster_interface_auv"),
-                "launch",
-                "thruster_interface_auv.launch.py",
+                get_package_share_directory('thruster_interface_auv'),
+                'launch',
+                'thruster_interface_auv.launch.py',
             )
         )
     )

@@ -19,17 +19,17 @@ def generate_launch_description() -> LaunchDescription:
         thruster_interface_auv_node.
     """
     thruster_interface_auv_node = Node(
-        package="thruster_interface_auv",
-        executable="thruster_interface_auv_node.py",
-        name="thruster_interface_auv_node",
-        output="screen",
+        package='thruster_interface_auv',
+        executable='thruster_interface_auv_node.py',
+        name='thruster_interface_auv_node',
+        output='screen',
         emulate_tty=True,
         parameters=[
             path.join(
-                get_package_share_directory("auv_setup"),
-                "config",
-                "robots",
-                "orca.yaml",
+                get_package_share_directory('auv_setup'),
+                'config',
+                'robots',
+                'orca.yaml',
             )
         ],
     )

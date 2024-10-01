@@ -38,7 +38,7 @@ hydrophoneAxis = [None] * 5
 for i in range(5):
     hydrophoneAxis[i] = fig.add_subplot(gs_hydrophone[i, 0], sharex=hydrophoneAxis[0] if i else None)
     hydrophoneAxis[i].label_outer()
-fig.text(0.25, 0.965, "Hydrophone Data", ha="center")
+fig.text(0.25, 0.965, 'Hydrophone Data', ha='center')
 
 # Add subplots in the second column
 FFTAxis = fig.add_subplot(gs_dsp[0])
@@ -55,10 +55,10 @@ colorSoftGreen = (122 / 255, 200 / 255, 122 / 255)
 # .CSV Setup ==================================================
 # Get Directory of the .csv files
 PACKAGE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ACOUSTICS_CSV_FILE_DIR = PACKAGE_DIR + "/acoustics_data"
+ACOUSTICS_CSV_FILE_DIR = PACKAGE_DIR + '/acoustics_data'
 
 # List of all the acoustic files
-acousticsCSVFiles = csv_files = glob.glob(ACOUSTICS_CSV_FILE_DIR + "/acoustics_data_" + "*.csv")
+acousticsCSVFiles = csv_files = glob.glob(ACOUSTICS_CSV_FILE_DIR + '/acoustics_data_' + '*.csv')
 
 # Get the latest csv file name for acoustics data
 acousticsCSVFile = max(acousticsCSVFiles, key=os.path.getctime)
@@ -74,8 +74,8 @@ def convert_pandas_object_to_int_array(pandas_object: pd.Series) -> list:
     Returns:
         list: A list of integers extracted from the pandas object.
     """
-    pandas_string = pandas_object.iloc[0].strip("array('i', ").rstrip(")")
-    pandas_int_array = [int(x.strip()) for x in pandas_string.strip("[]").split(",")]
+    pandas_string = pandas_object.iloc[0].strip("array('i', ").rstrip(')')
+    pandas_int_array = [int(x.strip()) for x in pandas_string.strip('[]').split(',')]
 
     return pandas_int_array
 
@@ -90,8 +90,8 @@ def convert_pandas_object_to_float_array(pandas_object: pd.Series) -> list:
     Returns:
         list: A list of floats extracted from the pandas object.
     """
-    pandas_string = pandas_object.iloc[0].strip("array('f', ").rstrip(")")
-    pandas_float_array = [float(x.strip()) for x in pandas_string.strip("[]").split(",")]
+    pandas_string = pandas_object.iloc[0].strip("array('f', ").rstrip(')')
+    pandas_float_array = [float(x.strip()) for x in pandas_string.strip('[]').split(',')]
 
     return pandas_float_array
 
@@ -148,11 +148,11 @@ def get_acoustics_data() -> list:
 
     try:
         # Get latest hydrophone data
-        hydrophone1 = convert_pandas_object_to_int_array(latest_acoustics_data["Hydrophone1"])
-        hydrophone2 = convert_pandas_object_to_int_array(latest_acoustics_data["Hydrophone2"])
-        hydrophone3 = convert_pandas_object_to_int_array(latest_acoustics_data["Hydrophone3"])
-        hydrophone4 = convert_pandas_object_to_int_array(latest_acoustics_data["Hydrophone4"])
-        hydrophone5 = convert_pandas_object_to_int_array(latest_acoustics_data["Hydrophone5"])
+        hydrophone1 = convert_pandas_object_to_int_array(latest_acoustics_data['Hydrophone1'])
+        hydrophone2 = convert_pandas_object_to_int_array(latest_acoustics_data['Hydrophone2'])
+        hydrophone3 = convert_pandas_object_to_int_array(latest_acoustics_data['Hydrophone3'])
+        hydrophone4 = convert_pandas_object_to_int_array(latest_acoustics_data['Hydrophone4'])
+        hydrophone5 = convert_pandas_object_to_int_array(latest_acoustics_data['Hydrophone5'])
 
         # Unfiltered data is special as it is the same as Hydrohone 1 first 1024 values
         # This is because Acoustics PCB uses Hydrophone 1 to perform DSP
@@ -163,14 +163,14 @@ def get_acoustics_data() -> list:
 
         # Get DSP data
         filtered_data = convert_pandas_object_to_int_array(
-            latest_acoustics_data["FilterResponse"]
+            latest_acoustics_data['FilterResponse']
         )  # Also known as Filter response to the raw unfiltered data
-        fft_data = convert_pandas_object_to_int_array(latest_acoustics_data["FFT"])
-        peaks_data = convert_pandas_object_to_int_array(latest_acoustics_data["Peaks"])
+        fft_data = convert_pandas_object_to_int_array(latest_acoustics_data['FFT'])
+        peaks_data = convert_pandas_object_to_int_array(latest_acoustics_data['Peaks'])
 
         # Get multilateration data
-        tdoa_data = convert_pandas_object_to_float_array(latest_acoustics_data["TDOA"])
-        positon_data = convert_pandas_object_to_float_array(latest_acoustics_data["Position"])
+        tdoa_data = convert_pandas_object_to_float_array(latest_acoustics_data['TDOA'])
+        positon_data = convert_pandas_object_to_float_array(latest_acoustics_data['Position'])
     except Exception as e:
         print(f"ERROR: Couldn't read acoustics data. Exception: {e}")
 
@@ -198,7 +198,7 @@ def get_acoustics_data() -> list:
         peaks_amplitude_data = temp_amplitude
         peaks_frequency_data = temp_frequency
     except Exception as e:
-        print(f"ERROR processing DSP data. Exception: {e}")
+        print(f'ERROR processing DSP data. Exception: {e}')
 
     # return processed data ----------
     return [
@@ -272,30 +272,30 @@ def display_live_data() -> None:
         hydrophoneAxis[hydrophone_index].plot(
             x_hydrophone,
             hydrophone_data[hydrophone_index],
-            label=f"Hydrophone {hydrophone_index + 1}",
+            label=f'Hydrophone {hydrophone_index + 1}',
             color=colorSoftBlue,
             alpha=1,
         )
-        hydrophoneAxis[hydrophone_index].legend(loc="upper right", fontsize="xx-small")
+        hydrophoneAxis[hydrophone_index].legend(loc='upper right', fontsize='xx-small')
 
     # Plot Filter response
     x_raw = list(range(len(unfiltered_data)))
     x_filter = list(range(len(filter_data)))
     filterAxis.clear()
-    filterAxis.set_title("Filter response")
-    filterAxis.plot(x_raw, unfiltered_data, label="Raw", color=colorSoftBlue, alpha=0.5)
-    filterAxis.plot(x_filter, filter_data, label="Filter", color=colorSoftGreen, alpha=0.7)
-    filterAxis.legend(loc="upper right", fontsize="xx-small")
+    filterAxis.set_title('Filter response')
+    filterAxis.plot(x_raw, unfiltered_data, label='Raw', color=colorSoftBlue, alpha=0.5)
+    filterAxis.plot(x_filter, filter_data, label='Filter', color=colorSoftGreen, alpha=0.7)
+    filterAxis.legend(loc='upper right', fontsize='xx-small')
 
     # Plot FFT data
     FFTAxis.clear()
-    FFTAxis.set_title("FFT")
-    FFTAxis.set_xlabel("Frequency [Hz]")
-    FFTAxis.set_ylabel("Amplitude")
+    FFTAxis.set_title('FFT')
+    FFTAxis.set_xlabel('Frequency [Hz]')
+    FFTAxis.set_ylabel('Amplitude')
     FFTAxis.bar(
         fft_frequency_data,
         fft_amplitude_data,
-        label="FFT",
+        label='FFT',
         color=colorSoftPurple,
         alpha=1,
         width=500,
@@ -303,17 +303,17 @@ def display_live_data() -> None:
     FFTAxis.scatter(
         peaks_frequency_data,
         peaks_amplitude_data,
-        label="Peaks",
-        color="red",
+        label='Peaks',
+        color='red',
         alpha=0.7,
         s=30,
         linewidths=1.4,
-        marker="x",
+        marker='x',
     )
-    FFTAxis.legend(loc="upper right", fontsize="xx-small")
+    FFTAxis.legend(loc='upper right', fontsize='xx-small')
 
     # Print out the unused Multilateration data
-    print(f"TDOA Data: {tdoa_data}     |     Position Data: {position_data}")
+    print(f'TDOA Data: {tdoa_data}     |     Position Data: {position_data}')
 
 
 # Plotting live data

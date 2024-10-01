@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-! NOTE: 
+! NOTE:
 ! For now we don't have a external sensor to measure internal temperature
 ! Instead we just use Internal Computer temperature sensor to gaugue temperature of the environment approximately
 ! In the future someone should implement a external temperature sensor for measuting a more accurate state of the temperatuer on the inside of the AUV
@@ -13,7 +13,7 @@ import subprocess
 class TemperatureSensor:
     def __init__(self) -> None:
         # Temperature Sensor Setup
-        self.temperature_sensor_file_location = "/sys/class/thermal/thermal_zone0/temp"
+        self.temperature_sensor_file_location = '/sys/class/thermal/thermal_zone0/temp'
 
     def get_temperature(self) -> float:
         """
@@ -30,7 +30,7 @@ class TemperatureSensor:
         try:
             # Read internal temperature on the computer
             result = subprocess.run(
-                ["cat", self.temperature_sensor_file_location],
+                ['cat', self.temperature_sensor_file_location],
                 capture_output=True,
                 text=True,
                 check=False,
@@ -47,5 +47,5 @@ class TemperatureSensor:
 
             return temperature  # In Celsius
         except Exception as error:
-            print(f"ERROR: Failed to get temperature: {error}")
+            print(f'ERROR: Failed to get temperature: {error}')
             return 0.0  # In Celsius

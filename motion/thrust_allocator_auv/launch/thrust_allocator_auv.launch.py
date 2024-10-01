@@ -20,17 +20,17 @@ def generate_launch_description() -> LaunchDescription:
         the thrust_allocator_auv_node.
     """
     thrust_allocator_auv_node = Node(
-        package="thrust_allocator_auv",
-        executable="thrust_allocator_auv_node",
-        name="thrust_allocator_auv_node",
+        package='thrust_allocator_auv',
+        executable='thrust_allocator_auv_node',
+        name='thrust_allocator_auv_node',
         parameters=[
             path.join(
-                get_package_share_directory("auv_setup"),
-                "config",
-                "robots",
-                "orca.yaml",
+                get_package_share_directory('auv_setup'),
+                'config',
+                'robots',
+                'orca.yaml',
             )
         ],
-        output="screen",
+        output='screen',
     )
     return LaunchDescription([thrust_allocator_auv_node])

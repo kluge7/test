@@ -15,39 +15,39 @@ from vortex_msgs.msg import ThrusterForces
 class ThrusterInterfaceAUVNode(Node):
     def __init__(self) -> None:
         # Initialize and name the node process running
-        super().__init__("thruster_interface_auv_node")
+        super().__init__('thruster_interface_auv_node')
 
         # Create a subscriber that takes data from thruster forces
         # Then convert this Forces into PWM signals and control the thrusters
         # Publish PWM values as deebuging feature
-        self.thruster_forces_subscriber = self.create_subscription(ThrusterForces, "thrust/thruster_forces", self._thruster_forces_callback, 10)
-        self.thruster_pwm_publisher = self.create_publisher(Int16MultiArray, "pwm", 10)
+        self.thruster_forces_subscriber = self.create_subscription(ThrusterForces, 'thrust/thruster_forces', self._thruster_forces_callback, 10)
+        self.thruster_pwm_publisher = self.create_publisher(Int16MultiArray, 'pwm', 10)
 
         # Get thruster mapping, direction, offset and clamping parameters
-        self.declare_parameter("propulsion.thrusters.thruster_to_pin_mapping", [7, 6, 5, 4, 3, 2, 1, 0])
-        self.declare_parameter("propulsion.thrusters.thruster_direction", [1, 1, 1, 1, 1, 1, 1, 1])
-        self.declare_parameter("propulsion.thrusters.thruster_PWM_offset", [0, 0, 0, 0, 0, 0, 0, 0])
+        self.declare_parameter('propulsion.thrusters.thruster_to_pin_mapping', [7, 6, 5, 4, 3, 2, 1, 0])
+        self.declare_parameter('propulsion.thrusters.thruster_direction', [1, 1, 1, 1, 1, 1, 1, 1])
+        self.declare_parameter('propulsion.thrusters.thruster_PWM_offset', [0, 0, 0, 0, 0, 0, 0, 0])
         self.declare_parameter(
-            "propulsion.thrusters.thruster_PWM_min",
+            'propulsion.thrusters.thruster_PWM_min',
             [1100, 1100, 1100, 1100, 1100, 1100, 1100, 1100],
         )
         self.declare_parameter(
-            "propulsion.thrusters.thruster_PWM_max",
+            'propulsion.thrusters.thruster_PWM_max',
             [1900, 1900, 1900, 1900, 1900, 1900, 1900, 1900],
         )
 
-        self.declare_parameter("propulsion.thrusters.thrust_update_rate", 10.0)
+        self.declare_parameter('propulsion.thrusters.thrust_update_rate', 10.0)
 
-        self.thruster_mapping = self.get_parameter("propulsion.thrusters.thruster_to_pin_mapping").value
-        self.thruster_direction = self.get_parameter("propulsion.thrusters.thruster_direction").value
-        self.thruster_pwm_offset = self.get_parameter("propulsion.thrusters.thruster_PWM_offset").value
-        self.thruster_pwm_min = self.get_parameter("propulsion.thrusters.thruster_PWM_min").value
-        self.thruster_pwm_max = self.get_parameter("propulsion.thrusters.thruster_PWM_max").value
-        self.thrust_timer_period = 1.0 / self.get_parameter("propulsion.thrusters.thrust_update_rate").value
+        self.thruster_mapping = self.get_parameter('propulsion.thrusters.thruster_to_pin_mapping').value
+        self.thruster_direction = self.get_parameter('propulsion.thrusters.thruster_direction').value
+        self.thruster_pwm_offset = self.get_parameter('propulsion.thrusters.thruster_PWM_offset').value
+        self.thruster_pwm_min = self.get_parameter('propulsion.thrusters.thruster_PWM_min').value
+        self.thruster_pwm_max = self.get_parameter('propulsion.thrusters.thruster_PWM_max').value
+        self.thrust_timer_period = 1.0 / self.get_parameter('propulsion.thrusters.thrust_update_rate').value
 
         # Initialize thruster driver
         self.thruster_driver = ThrusterInterfaceAUVDriver(
-            ros2_package_name_for_thruster_datasheet=get_package_share_directory("thruster_interface_auv"),
+            ros2_package_name_for_thruster_datasheet=get_package_share_directory('thruster_interface_auv'),
             thruster_mapping=self.thruster_mapping,
             thruster_direction=self.thruster_direction,
             thruster_pwm_offset=self.thruster_pwm_offset,
@@ -102,5 +102,5 @@ def main(args: list = None) -> None:
     rclpy.shutdown()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

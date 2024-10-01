@@ -40,5 +40,5 @@ class PressureSensor:
             pressure = self.channel_pressure.pressure
             return pressure
         except Exception as error:
-            print(f"ERROR: Failed to get pressure: {error}")
+            print(f'ERROR: Failed to get pressure: {error}')
             return 0.0
