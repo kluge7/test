@@ -6,7 +6,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     env:
-      ROS_DISTRO: foxy  # Adjust ROS 2 distro as needed
+      ROS_DISTRO: humble  # Adjust ROS 2 distro as needed
     steps:
       - uses: actions/checkout@v3
 
