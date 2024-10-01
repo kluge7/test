@@ -21,12 +21,8 @@ find_package(vortex_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
 
-# Include directories for Eigen3 and project headers
-include_directories(${EIGEN3_INCLUDE_DIR} include)
-
-# Optionally, explicitly link Eigen3 include directories
-# (Not always necessary, but can help clang-tidy find Eigen headers)
-target_include_directories(${PROJECT_NAME}_node PRIVATE ${EIGEN3_INCLUDE_DIRS})
+# Include directories for headers
+include_directories(include)
 
 # Add executable and list the source files
 add_executable(${PROJECT_NAME}_node 
@@ -35,19 +31,13 @@ add_executable(${PROJECT_NAME}_node
   src/pseudoinverse_allocator.cpp
 )
 
-# Specify dependencies for the target
+# Specify dependencies
 ament_target_dependencies(${PROJECT_NAME}_node 
   rclcpp 
   geometry_msgs 
   vortex_msgs
   Eigen3
 )
-
-# Optionally, enable clang-tidy during the build process
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  set_target_properties(${PROJECT_NAME}_node PROPERTIES
-    CXX_CLANG_TIDY "clang-tidy;-checks=*")
-endif()
 
 # Install include directory
 install(
