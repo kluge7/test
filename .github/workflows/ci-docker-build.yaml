@@ -26,9 +26,6 @@ jobs:
           # Install ROS 2 Humble desktop version
           sudo apt install -y ros-humble-desktop
 
-          # Source ROS 2 setup script
-          echo "source /opt/ros/humble/setup.bash" >> $GITHUB_ENV
-
       - name: Install Build Tools and Dependencies
         run: |
           sudo apt install -y python3-colcon-common-extensions python3-rosdep
@@ -52,16 +49,12 @@ jobs:
           cd ~/ros2_ws
 
       - name: Install Package Dependencies with rosdep
-        env:
-          ROS_PACKAGE_PATH: /opt/ros/humble/share
         run: |
           source /opt/ros/humble/setup.bash
           cd ~/ros2_ws
           rosdep install --from-paths src --ignore-src -r -y
 
       - name: Build ROS 2 Workspace
-        env:
-          ROS_PACKAGE_PATH: /opt/ros/humble/share
         run: |
           source /opt/ros/humble/setup.bash
           cd ~/ros2_ws
