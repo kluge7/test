@@ -1,48 +1,33 @@
-name: Linting Pipeline
+name: Clang-Format Code Style Check
 
 on: [pull_request]
 
 jobs:
-  lint:
+  clang-format:
     runs-on: ubuntu-latest
-    env:
-      ROS_DISTRO: humble  # Adjust ROS 2 distro as needed
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Install ROS 2 and dependencies
+      - name: Install clang-format
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl gnupg lsb-release
-          sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
-          sudo sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
-          sudo apt-get update
-          sudo apt-get install -y ros-${ROS_DISTRO}-desktop
-          sudo apt-get install -y python3-pip python3-colcon-common-extensions clang-tidy
-          python3 -m pip install -U colcon-compile-commands
-          sudo rosdep init
-          rosdep update
+          sudo apt-get install -y clang-format
 
-      - name: Install package dependencies
+      - name: Run clang-format check
         run: |
-          rosdep install --from-paths src --ignore-src -r -y
+          # Find all C/C++ source and header files
+          find . -type f \( -name '*.c' -o -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.h' -o -name '*.hpp' -o -name '*.hh' -o -name '*.hxx' \) -print0 | xargs -0 clang-format -i
 
-      - name: Source ROS 2 environment
-        shell: bash -l {0}
-        run: |
-          source /opt/ros/${ROS_DISTRO}/setup.bash
-
-      - name: Build the workspace
-        shell: bash -l {0}
-        run: |
-          colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-      - name: Merge compile_commands.json files
-        shell: bash -l {0}
-        run: |
-          colcon compile-commands merge
-
-      - name: Run clang-tidy
-        shell: bash -l {0}
-        run: |
-          find . -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' | xargs -P$(nproc) -I{} clang-tidy {} -p .
+          # Check if any files were modified
+          if [[ $(git status --porcelain) ]]; then
+            echo "Code is not properly formatted. Please run clang-format."
+            echo "Modified files:"
+            git status --porcelain
+            echo "Differences:"
+            git --no-pager diff
+            exit 1
+          else
+            echo "All code is properly formatted."
+          fi

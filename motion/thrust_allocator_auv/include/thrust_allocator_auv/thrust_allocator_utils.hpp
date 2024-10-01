@@ -23,7 +23,7 @@
  */
 template <typename Derived>
 inline bool is_invalid_matrix(const Eigen::MatrixBase<Derived> &M) {
-  bool has_nan = !(M.array() == M.array()).all();
+  bool has_nan=!(M.array() == M.array()).all();
   bool has_inf = M.array().isInf().any();
   return has_nan || has_inf;
 }
