@@ -1,6 +1,6 @@
-name: Build ROS2 Project
+name: Build and Test ROS2 Project
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build:
@@ -59,7 +59,15 @@ jobs:
           source /opt/ros/humble/setup.bash
           cd ~/ros2_ws
           colcon build --event-handlers console_cohesion+
-
-      - name: Confirm Build Success
+          - name: Run Tests
+          run: |
+            source /opt/ros/humble/setup.bash
+            cd ~/ros2_ws
+            colcon test --event-handlers console_direct+
+        
+      - name: Test Results Summary
         run: |
-          echo "Build completed successfully."
+          cd ~/ros2_ws
+          colcon test-result --verbose
+
+
