@@ -12,18 +12,18 @@ class LCDScreenDriver:
         lcd_i2c_address = 0x27
 
         self._lcd = CharLCD(
-            i2c_expander='PCF8574',
+            i2c_expander="PCF8574",
             address=lcd_i2c_address,
             port=1,
             cols=16,
             rows=2,
             dotsize=8,
-            charmap='A02',
+            charmap="A02",
             auto_linebreaks=True,
             backlight_enabled=True,
         )
 
-    def write_to_screen(self, line1: str = '', line2: str = '') -> None:
+    def write_to_screen(self, line1: str = "", line2: str = "") -> None:
         """
         Writes two lines of text to the LCD screen.
 
@@ -44,7 +44,7 @@ class LCDScreenDriver:
         line1 = line1[0:spaces_available]
         line2 = line2[0:spaces_available]
 
-        self._lcd.write_string(line1 + '\r\n')
+        self._lcd.write_string(line1 + "\r\n")
         self._lcd.write_string(line2)
 
     def fancy_animation(self, animation_speed: float = 0.4) -> None:

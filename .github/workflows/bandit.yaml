@@ -1,9 +1,9 @@
-name: Mypy Type Checker
+name: Bandit Security Scan
 
 on: [pull_request]
 
 jobs:
-  mypy:
+  bandit:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,10 +14,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install mypy
+      - name: Install bandit
         run: |
-          python -m pip install mypy
+          python -m pip install bandit[toml]
 
-      - name: Run mypy
+      - name: Run bandit scan
         run: |
-          mypy . --explicit-package-bases
+          bandit -c pyproject.toml -r . --severity-level medium

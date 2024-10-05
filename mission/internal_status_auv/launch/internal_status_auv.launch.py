@@ -24,33 +24,33 @@ def generate_launch_description() -> LaunchDescription:
     """
     # Path to the YAML file
     yaml_file_path = os.path.join(
-        get_package_share_directory('internal_status_auv'),
-        '../../../../',  # Navigate to the workspace root
-        'src/vortex-auv/auv_setup/config/robots/',  # Directory containing YAML files
-        'orca.yaml',  # Configuration file for the orca robot
+        get_package_share_directory("internal_status_auv"),
+        "../../../../",  # Navigate to the workspace root
+        "src/vortex-auv/auv_setup/config/robots/",  # Directory containing YAML files
+        "orca.yaml",  # Configuration file for the orca robot
     )
 
     # Power Sense Module Node
     power_sense_module_node = Node(
-        package='internal_status_auv',
-        executable='power_sense_module_node.py',
-        output='screen',
+        package="internal_status_auv",
+        executable="power_sense_module_node.py",
+        output="screen",
         parameters=[yaml_file_path],
     )
 
     # Pressure Sensor Node
     pressure_sensor_node = Node(
-        package='internal_status_auv',
-        executable='pressure_sensor_node.py',
-        output='screen',
+        package="internal_status_auv",
+        executable="pressure_sensor_node.py",
+        output="screen",
         parameters=[yaml_file_path],
     )
 
     # Temperature Sensor Node
     temperature_sensor_node = Node(
-        package='internal_status_auv',
-        executable='temperature_sensor_node.py',
-        output='screen',
+        package="internal_status_auv",
+        executable="temperature_sensor_node.py",
+        output="screen",
         parameters=[yaml_file_path],
     )
 

@@ -1,9 +1,9 @@
-name: Mypy Type Checker
+name: Pylint Code Linter
 
 on: [pull_request]
 
 jobs:
-  mypy:
+  pylint:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,10 +14,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install mypy
+      - name: Install pylint
         run: |
-          python -m pip install mypy
+          python -m pip install pylint
 
-      - name: Run mypy
+      - name: Run pylint
         run: |
-          mypy . --explicit-package-bases
+          pylint .

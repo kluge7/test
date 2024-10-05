@@ -11,35 +11,35 @@ from std_msgs.msg import Float32
 class PowerSenseModulePublisher(Node):
     def __init__(self) -> None:
         # Node setup ----------
-        super().__init__('power_sense_module_publisher')
+        super().__init__("power_sense_module_publisher")
         self.psm = internal_status_auv.power_sense_module_lib.PowerSenseModule()
 
         # Create publishers ----------
-        self.publisher_current = self.create_publisher(Float32, '/auv/power_sense_module/current', 5)
-        self.publisher_voltage = self.create_publisher(Float32, '/auv/power_sense_module/voltage', 5)
+        self.publisher_current = self.create_publisher(Float32, "/auv/power_sense_module/current", 5)
+        self.publisher_voltage = self.create_publisher(Float32, "/auv/power_sense_module/voltage", 5)
 
         # Data gathering cycle ----------
         self.current = 0.0
         self.voltage = 0.0
 
         self.declare_parameter(
-            'internal_status.power_sense_module_read_rate', 10.0
+            "internal_status.power_sense_module_read_rate", 10.0
         )  # Providing a default value 10.0 => 0.1 second delay per data gathering
-        read_rate = self.get_parameter('internal_status.power_sense_module_read_rate').get_parameter_value().double_value
+        read_rate = self.get_parameter("internal_status.power_sense_module_read_rate").get_parameter_value().double_value
         read_timer_period = 1.0 / read_rate
         self.read_timer = self.create_timer(read_timer_period, self.read_timer_callback)
 
         # Watchdog for anomalies ----------
-        self.logger = get_logger('power_sense_module')
+        self.logger = get_logger("power_sense_module")
 
-        self.declare_parameter('internal_status.voltage_min', 14.5)
-        self.voltage_min = self.get_parameter('internal_status.voltage_min').get_parameter_value().double_value
+        self.declare_parameter("internal_status.voltage_min", 14.5)
+        self.voltage_min = self.get_parameter("internal_status.voltage_min").get_parameter_value().double_value
 
-        self.declare_parameter('internal_status.voltage_max', 16.8)
-        self.voltage_max = self.get_parameter('internal_status.voltage_max').get_parameter_value().double_value
+        self.declare_parameter("internal_status.voltage_max", 16.8)
+        self.voltage_max = self.get_parameter("internal_status.voltage_max").get_parameter_value().double_value
 
-        self.declare_parameter('internal_status.power_sense_module_warning_rate', 0.1)
-        warning_rate = self.get_parameter('internal_status.power_sense_module_warning_rate').get_parameter_value().double_value
+        self.declare_parameter("internal_status.power_sense_module_warning_rate", 0.1)
+        warning_rate = self.get_parameter("internal_status.power_sense_module_warning_rate").get_parameter_value().double_value
         warning_timer_period = 1.0 / warning_rate
         self.warning_timer = self.create_timer(warning_timer_period, self.warning_timer_callback)
 
@@ -75,9 +75,9 @@ class PowerSenseModulePublisher(Node):
         and logs a warning if the voltage is either too low or too high.
         """
         if self.voltage < self.voltage_min:
-            self.logger.fatal(f'WARNING: Battery Voltage to LOW at {self.voltage} V')
+            self.logger.fatal(f"WARNING: Battery Voltage to LOW at {self.voltage} V")
         elif self.voltage > self.voltage_max:
-            self.logger.fatal(f'WARNING: Battery Voltage to HIGH at {self.voltage} V')
+            self.logger.fatal(f"WARNING: Battery Voltage to HIGH at {self.voltage} V")
 
 
 def main(args: list = None) -> None:
@@ -106,5 +106,5 @@ def main(args: list = None) -> None:
     rclpy.shutdown()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

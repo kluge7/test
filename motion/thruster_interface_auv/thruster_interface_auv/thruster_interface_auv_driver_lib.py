@@ -11,7 +11,7 @@ class ThrusterInterfaceAUVDriver:
         i2c_bus: int = 1,
         pico_i2c_address: int = 0x21,
         system_operational_voltage: float = 16.0,
-        ros2_package_name_for_thruster_datasheet: str = '',
+        ros2_package_name_for_thruster_datasheet: str = "",
         thruster_mapping: list[int] = [7, 6, 5, 4, 3, 2, 1, 0],
         thruster_direction: list[int] = [1, 1, 1, 1, 1, 1, 1, 1],
         thruster_pwm_offset: list[int] = [0, 0, 0, 0, 0, 0, 0, 0],
@@ -23,7 +23,7 @@ class ThrusterInterfaceAUVDriver:
         try:
             self.bus = smbus2.SMBus(i2c_bus)
         except Exception as error_code:
-            print(f'ERROR: Failed connection I2C bus nr {self.bus}: {error_code}')
+            print(f"ERROR: Failed connection I2C bus nr {self.bus}: {error_code}")
         self.pico_i2c_address = pico_i2c_address
 
         # Set mapping, direction and offset for the thrusters
@@ -63,8 +63,8 @@ class ThrusterInterfaceAUVDriver:
         """
         # Read the important data from the .csv file
         thruster_datasheet_file_data = pandas.read_csv(
-            f'{self.ros2_package_name_for_thruster_datasheet}/resources/T200-Thrusters-{self.system_operational_voltage}V.csv',
-            usecols=[' PWM (µs)', ' Force (Kg f)'],
+            f"{self.ros2_package_name_for_thruster_datasheet}/resources/T200-Thrusters-{self.system_operational_voltage}V.csv",
+            usecols=[" PWM (µs)", " Force (Kg f)"],
         )
 
         # Convert Newtons to Kg as Thruster Datasheet is in Kg format
@@ -72,8 +72,8 @@ class ThrusterInterfaceAUVDriver:
             thruster_forces_array[i] = thruster_forces / 9.80665
 
         # Interpolate data
-        thruster_datasheet_file_forces = thruster_datasheet_file_data[' Force (Kg f)'].values
-        thruster_datasheet_file_data_pwm = thruster_datasheet_file_data[' PWM (µs)'].values
+        thruster_datasheet_file_forces = thruster_datasheet_file_data[" Force (Kg f)"].values
+        thruster_datasheet_file_data_pwm = thruster_datasheet_file_data[" PWM (µs)"].values
         interpolated_pwm = numpy.interp(
             thruster_forces_array,
             thruster_datasheet_file_forces,
@@ -139,6 +139,6 @@ class ThrusterInterfaceAUVDriver:
         try:
             self._send_data_to_escs(thruster_pwm_array)
         except Exception as error_code:
-            print(f'ERROR: Failed to send PWM values: {error_code}')
+            print(f"ERROR: Failed to send PWM values: {error_code}")
 
         return thruster_pwm_array
