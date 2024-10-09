@@ -11,6 +11,8 @@ int main(int argc, char **argv) {
 
   // Unused variable
   int unused_variable = 42;
+  int unused_variable_2 = 42;
+
 
   // Use of strcpy (unsafe function, should trigger clang-tidy)
   char message[50];

@@ -43,11 +43,10 @@ jobs:
         run: |
           source /opt/ros/humble/setup.bash
           cd ~/ros2_ws
-          colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --event-handlers console_cohesion+
+          cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 
       - name: Run Clang-Tidy on C++ code
         run: |
           source /opt/ros/humble/setup.bash
           cd ~/ros2_ws
-          # Let clang-tidy automatically pick up the .clang-tidy configuration file
-          find src/ -name '*.cpp' | xargs -I{} clang-tidy {} -p build/ -header-filter='^src/vortex-auv' --quiet -warnings-as-errors='*'
+          find src/ -name '*.cpp' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' | xargs -I{} clang-tidy {} -p build/ -header-filter='.*' -warnings-as-errors='*'
