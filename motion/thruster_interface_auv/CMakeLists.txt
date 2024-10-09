@@ -15,6 +15,17 @@ find_package(ament_cmake_python REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(vortex_msgs REQUIRED)
 
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  find_package(ament_clang_tidy REQUIRED)
+
+  # Enable Clang-Tidy and other linters
+  ament_lint_auto_find_test_dependencies()
+
+  # Configure Clang-Tidy to use .clang-tidy file in the source directory
+  ament_clang_tidy(SETTINGS_FILE ${CMAKE_SOURCE_DIR}/.clang-tidy)
+endif()
+
 ament_python_install_package(thruster_interface_auv)
 
 install(DIRECTORY
