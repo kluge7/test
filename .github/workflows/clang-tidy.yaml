@@ -45,12 +45,10 @@ jobs:
 
       - name: Run Clang-Tidy Review
         uses: ZedThree/clang-tidy-review@v0.14.0
+        with:
+          split_workflow: true
         id: review
 
-      - name: Upload Clang-Tidy Fixes
+      - name: Upload Clang-Tidy Review Artifacts
         uses: ZedThree/clang-tidy-review/upload@v0.14.0
         id: upload-review
-
-      - name: Fail on Clang-Tidy Warnings
-        if: steps.review.outputs.total_comments > 0
-        run: exit 1

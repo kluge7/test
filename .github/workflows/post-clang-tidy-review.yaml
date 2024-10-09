@@ -1,0 +1,19 @@
+name: Post Clang-Tidy Review Comments
+
+on:
+  workflow_run:
+    workflows: ["Clang-Tidy Review"]
+    types:
+      - completed
+
+jobs:
+  post-review:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Post Clang-Tidy Review Comments
+        uses: ZedThree/clang-tidy-review/post@v0.14.0
+        with:
+          lgtm_comment_body: ''
+          annotations: false
+          max_comments: 25  # Adjust as needed
