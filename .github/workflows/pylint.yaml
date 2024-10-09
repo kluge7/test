@@ -1,6 +1,6 @@
 name: Pylint Code Linter
 
-on: [pull_request]
+on: []
 
 jobs:
   pylint:

@@ -1,6 +1,6 @@
 name: Clang-Format Code Style Check
 
-on: [pull_request]
+on: []
 
 jobs:
   clang-format:

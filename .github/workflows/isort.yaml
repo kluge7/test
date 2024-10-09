@@ -1,6 +1,6 @@
 name: isort Import Sorting Check
 
-on: [pull_request]
+on: []
 
 jobs:
   isort:

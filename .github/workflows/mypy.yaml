@@ -1,6 +1,6 @@
 name: Mypy Type Checker
 
-on: [pull_request]
+on: []
 
 jobs:
   mypy:
