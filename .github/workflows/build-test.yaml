@@ -10,21 +10,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Cache for Dependencies
-        id: cache-ros  # Name this step so it can be referenced later
+      # Restore Cache for Build Artifacts and Dependencies
+      - name: Restore Cache
+        id: cache-ros
         uses: actions/cache@v3
         with:
           path: |
-            /opt/ros/humble  # Cache installed ROS 2 packages
-            ~/.ros           # Cache rosdep and other ROS-related configurations
-            ~/ros2_ws/build  # Cache build artifacts
-            ~/ros2_ws/install  # Cache installation
+            ~/ros2_ws/build
+            ~/ros2_ws/install
+            ~/.ros
           key: ${{ runner.os }}-ros-humble-${{ hashFiles('**/package.xml') }}
           restore-keys: |
             ${{ runner.os }}-ros-humble-
 
       - name: Install ROS 2 Humble if Cache Missed
-        if: steps.cache-ros.outputs.cache-hit != 'true'  # Correctly reference the cache step here
+        if: steps.cache-ros.outputs.cache-hit != 'true'  # Reference the cache step here
         run: |
           sudo apt update
           sudo apt install -y curl gnupg lsb-release
@@ -67,3 +67,13 @@ jobs:
         run: |
           cd ~/ros2_ws
           colcon test-result --verbose
+
+      # Save the cache after everything has been built
+      - name: Save Cache for Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/ros2_ws/build
+            ~/ros2_ws/install
+            ~/.ros
+          key: ${{ runner.os }}-ros-humble-${{ hashFiles('**/package.xml') }}
