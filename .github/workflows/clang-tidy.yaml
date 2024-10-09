@@ -1,4 +1,4 @@
-name: Clang-Tidy Review
+name: Clang-Tidy Check
 
 on: [pull_request]
 
@@ -29,6 +29,7 @@ jobs:
         run: |
           mkdir -p $GITHUB_WORKSPACE/src
           cd $GITHUB_WORKSPACE/src
+          cp -r $GITHUB_WORKSPACE/* .
           git clone https://github.com/vortexntnu/vortex-msgs.git
 
       - name: Install Package Dependencies with rosdep
@@ -43,12 +44,18 @@ jobs:
           cd $GITHUB_WORKSPACE
           colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
-      - name: Run Clang-Tidy Review
-        uses: ZedThree/clang-tidy-review@v0.14.0
-        with:
-          split_workflow: true
-        id: review
-
-      - name: Upload Clang-Tidy Review Artifacts
-        uses: ZedThree/clang-tidy-review/upload@v0.14.0
-        id: upload-review
+      - name: Run Clang-Tidy on C++ code
+        run: |
+          source /opt/ros/humble/setup.bash
+          cd $GITHUB_WORKSPACE
+          # Collect source files
+          find src/ -regex '.*\.\(cpp\|c\|cc\|cxx\|hpp\|h\|hh\|hxx\)$' > clang-tidy-files.txt
+          # Run clang-tidy
+          clang-tidy -p build/ -warnings-as-errors='*' --export-fixes=clang-tidy-fixes.yaml -header-filter='.*' -quiet $(cat clang-tidy-files.txt)
+          # Check if clang-tidy reported any errors
+          if [ $? -ne 0 ]; then
+            echo "Clang-Tidy found issues."
+            exit 1
+          else
+            echo "Clang-Tidy did not find any issues."
+          fi
