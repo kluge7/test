@@ -1,97 +1,58 @@
 name: Clang-Tidy Review
 
-on:
-  pull_request:
+on: [pull_request]
 
 jobs:
   clang-tidy:
     runs-on: ubuntu-22.04
 
-    env:
-      ROS_DISTRO: humble
-      WORKSPACE: ${{ github.workspace }}
-
     steps:
-      # 1. Checkout Repository
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      # 2. Setup ROS 2 Humble
-      - name: Setup ROS 2 Humble
+      - name: Install ROS 2 Humble
         run: |
-          sudo apt update && sudo apt install -y curl gnupg lsb-release
+          sudo apt update
+          sudo apt install -y curl gnupg lsb-release
           sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
           echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-          sudo apt update && sudo apt install -y ros-$ROS_DISTRO-desktop
-          echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
-          source /opt/ros/$ROS_DISTRO/setup.bash
+          sudo apt update
+          sudo apt install -y ros-humble-desktop
 
-      # 3. Install Build Tools and Dependencies
       - name: Install Build Tools and Dependencies
         run: |
           sudo apt install -y python3-colcon-common-extensions python3-rosdep clang-tidy
-          sudo rosdep init || echo "rosdep already initialized"
+          sudo rosdep init
           rosdep update
 
-      # 4. Set up ROS 2 Workspace
       - name: Set up ROS 2 Workspace
         run: |
-          mkdir -p $WORKSPACE/src
-          cd $WORKSPACE/src
+          mkdir -p $GITHUB_WORKSPACE/src
+          cd $GITHUB_WORKSPACE/src
           git clone https://github.com/vortexntnu/vortex-msgs.git
-          # Clone other necessary repositories if any
-          # Example:
-          # git clone https://github.com/your_org/another_package.git
 
-      # 5. List src Directory for Verification
-      - name: List src Directory
-        run: ls -R $WORKSPACE/src
-
-      # 6. Install Package Dependencies with rosdep
       - name: Install Package Dependencies with rosdep
         run: |
-          source /opt/ros/$ROS_DISTRO/setup.bash
+          source /opt/ros/humble/setup.bash
+          cd $GITHUB_WORKSPACE
           rosdep install --from-paths src --ignore-src -r -y
 
-      # 7. List Installed Dependencies for Verification
-      - name: List Installed Dependencies
-        run: rosdep check --from-paths src --ignore-src
-
-      # 8. Build ROS 2 Workspace
       - name: Build ROS 2 Workspace
         run: |
-          source /opt/ros/$ROS_DISTRO/setup.bash
+          source /opt/ros/humble/setup.bash
+          cd $GITHUB_WORKSPACE
           colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
-      # 9. Verify Build Success and Package Availability
-      - name: Verify Build
-        run: |
-          source $WORKSPACE/install/setup.bash
-          if ! ros2 pkg list | grep -q vortex_msgs; then
-            echo "vortex_msgs not found after build."
-            exit 1
-          fi
-          echo "vortex_msgs is successfully built and sourced."
-
-      # 10. Run Clang-Tidy Review
       - name: Run Clang-Tidy Review
         uses: ZedThree/clang-tidy-review@v0.19.0
         id: review
         with:
-          build_dir: ${{ github.workspace }}/build
-          lgtm_comment_body: 'clang-tidy review says "All clean, LGTM! 👍"'
-          annotations: true
+            build_dir: $GITHUB_WORKSPACE/build
 
-      # 11. Upload Clang-Tidy Fixes
       - name: Upload Clang-Tidy Fixes
         uses: ZedThree/clang-tidy-review/upload@v0.19.0
         id: upload-review
 
-      # 12. Fail on Clang-Tidy Warnings
       - name: Fail on Clang-Tidy Warnings
         if: steps.review.outputs.total_comments > 0
-        run: |
-          echo "Clang-Tidy found ${{ steps.review.outputs.total_comments }} issues."
-          exit 1
+        run: exit 1
