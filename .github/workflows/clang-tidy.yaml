@@ -49,5 +49,5 @@ jobs:
         run: |
           source /opt/ros/humble/setup.bash
           cd ~/ros2_ws
-          # Explicitly tell clang-tidy to use the .clang-tidy file located in src/vortex-auv
-          find src/ -name '*.cpp' | xargs -I{} clang-tidy {} -p build/ -header-filter='^src/vortex-auv' -config="$(cat src/vortex-auv/.clang-tidy)" -warnings-as-errors='*'
+          # Let clang-tidy automatically pick up the .clang-tidy configuration file
+          find src/ -name '*.cpp' | xargs -I{} clang-tidy {} -p build/ -header-filter='^src/vortex-auv' --quiet -warnings-as-errors='*'
