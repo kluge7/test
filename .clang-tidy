@@ -1,5 +1,0 @@
-Checks: '-*,clang-analyzer-*,modernize-*,performance-*,readability-*,bugprone-*'
-WarningsAsErrors: 'clang-analyzer-*'
-HeaderFilterRegex: '.*'
-AnalyzeTemporaryDtors: false
-FormatStyle: file
