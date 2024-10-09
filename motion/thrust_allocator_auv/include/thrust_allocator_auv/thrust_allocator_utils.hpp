@@ -104,7 +104,7 @@ inline bool saturate_vector_values(Eigen::VectorXd& vec, double min,
 inline void array_eigen_to_msg(const Eigen::VectorXd& u,
     vortex_msgs::msg::ThrusterForces& msg)
 {
-    int r = u.size();
+    Eigen::Index r = u.size();
     std::vector<double> u_vec(r);
     std::copy_n(u.begin(), r, u_vec.begin());
     msg.thrust = u_vec;

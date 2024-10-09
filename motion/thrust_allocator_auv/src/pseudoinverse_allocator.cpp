@@ -1,6 +1,6 @@
 #include "thrust_allocator_auv/pseudoinverse_allocator.hpp"
 
-PseudoinverseAllocator::PseudoinverseAllocator(Eigen::MatrixXd T_pinv)
+PseudoinverseAllocator::PseudoinverseAllocator(const Eigen::MatrixXd& T_pinv)
     : T_pinv_(std::move(T_pinv))
 {
 }
