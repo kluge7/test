@@ -1,0 +1,11 @@
+Checks: >
+  -*,
+  clang-analyzer-*,
+  bugprone-*,
+  performance-*,
+  cppcoreguidelines-*,
+  modernize-*,
+  -cppcoreguidelines-avoid-magic-numbers  # Disable magic number check
+WarningsAsErrors: '*'
+HeaderFilterRegex: '.*'
+FormatStyle: file
