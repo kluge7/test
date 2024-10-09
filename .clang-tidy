@@ -1,0 +1,5 @@
+Checks: '-*,modernize-*,readability-*,clang-analyzer-*,performance-*,-modernize-use-trailing-return-type'
+WarningsAsErrors: ''
+HeaderFilterRegex: '.*'
+AnalyzeTemporaryDtors: true
+FormatStyle: file
