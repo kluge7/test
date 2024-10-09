@@ -62,6 +62,7 @@ jobs:
 
       - name: Run Clang-Tidy on C++ code
         run: |
-          source /opt/ros/humble/setup.bash
-          cd ~/ros2_ws
-          find src/ -name '*.cpp' | xargs -I{} clang-tidy {} -p build/ -header-filter='.*' -system-headers
+            source /opt/ros/humble/setup.bash
+            cd ~/ros2_ws
+            find src/ -name '*.cpp' | xargs -I{} clang-tidy {} -p build/ -header-filter='^/home/kluge/Documents/ros2_ws/src/vortex-auv'
+        
