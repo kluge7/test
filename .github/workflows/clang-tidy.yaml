@@ -43,6 +43,15 @@ jobs:
           cd $GITHUB_WORKSPACE
           colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
+      - name: Verify Compilation Database
+        run: |
+            ls -la $GITHUB_WORKSPACE/build
+            if [ ! -f "$GITHUB_WORKSPACE/build/compile_commands.json" ]; then
+              echo "Compilation database not found!"
+              exit 1
+            fi
+
+
       - name: Run Clang-Tidy Review
         uses: ZedThree/clang-tidy-review@v0.19.0
         id: review
