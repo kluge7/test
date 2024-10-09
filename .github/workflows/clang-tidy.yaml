@@ -51,13 +51,20 @@ jobs:
               exit 1
             fi
 
+      - name: Verify .clang-tidy file
+        run: |
+              if [ ! -f "$GITHUB_WORKSPACE/.clang-tidy" ]; then
+                echo ".clang-tidy file not found!"
+                exit 1
+              fi
 
       - name: Run Clang-Tidy Review
         uses: ZedThree/clang-tidy-review@v0.19.0
         id: review
         with:
+            build_dir: $GITHUB_WORKSPACE/build  # Set the build directory explicitly
             max_comments: 25
-            config_file: $GITHUB_WORKSPACE/src/vortex-auv
+            config_file: "$GITHUB_WORKSPACE/src/vortex-auv/.clang-tidy"
             annotations: false
 
       - name: Upload Clang-Tidy Fixes
