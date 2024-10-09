@@ -45,9 +45,14 @@ jobs:
           cd ~/ros2_ws
           colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --event-handlers console_cohesion+
 
-      - name: Run Clang-Tidy on C++ code
-        run: |
-          source /opt/ros/humble/setup.bash
-          cd ~/ros2_ws
-          # Explicitly tell clang-tidy to use the .clang-tidy file located in src/vortex-auv
-          find src/ -name '*.cpp' | xargs -I{} clang-tidy {} -p build/ -header-filter='^src/vortex-auv' -config="$(cat src/vortex-auv/.clang-tidy)" -warnings-as-errors='*'
+      - name: Run Clang-Tidy Review
+        uses: ZedThree/clang-tidy-review@v0.14.0
+        id: review
+
+      - name: Upload Clang-Tidy Review Artefact
+        uses: ZedThree/clang-tidy-review/upload@v0.14.0
+        id: upload-review
+
+      # Fail the check if any clang-tidy comments are generated
+      - if: steps.review.outputs.total_comments > 0
+        run: exit 1
