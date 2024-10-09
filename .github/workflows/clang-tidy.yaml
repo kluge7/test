@@ -53,10 +53,16 @@ jobs:
 
       - name: Verify .clang-tidy file
         run: |
+              echo "Current directory: $GITHUB_WORKSPACE"
+              echo "Listing all files in the current workspace:"
+              ls -la $GITHUB_WORKSPACE
               if [ ! -f "$GITHUB_WORKSPACE/.clang-tidy" ]; then
                 echo ".clang-tidy file not found!"
                 exit 1
+              else
+                echo ".clang-tidy file found!"
               fi
+
 
       - name: Run Clang-Tidy Review
         uses: ZedThree/clang-tidy-review@v0.19.0
