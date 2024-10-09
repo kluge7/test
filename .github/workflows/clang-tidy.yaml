@@ -64,5 +64,6 @@ jobs:
         run: |
             source /opt/ros/humble/setup.bash
             cd ~/ros2_ws
-            find src/ -name '*.cpp' | xargs -I{} clang-tidy {} -p build/ -header-filter='^/home/kluge/Documents/ros2_ws/src/vortex-auv'
+            find src/ -name '*.cpp' | xargs -I{} clang-tidy {} -p build/ -header-filter='^/home/kluge/Documents/ros2_ws/src/vortex-auv' -warnings-as-errors='*'
+        
         
