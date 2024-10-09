@@ -10,46 +10,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install ROS 2 Humble
-        run: |
-          sudo apt update
-          sudo apt install -y curl gnupg lsb-release
-          sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-          sudo apt update
-          sudo apt install -y ros-humble-desktop
-
-      - name: Install Build Tools and Dependencies
-        run: |
-          sudo apt install -y python3-colcon-common-extensions python3-rosdep clang-tidy
-          sudo rosdep init
-          rosdep update
-
-      - name: Set up ROS 2 Workspace
-        run: |
-          mkdir -p ~/ros2_ws/src
-          cd ~/ros2_ws/src
-          cp -r $GITHUB_WORKSPACE/* .
-          git clone https://github.com/vortexntnu/vortex-msgs.git
-          cd ~/ros2_ws
-
-      - name: Install Package Dependencies with rosdep
-        run: |
-          source /opt/ros/humble/setup.bash
-          cd ~/ros2_ws
-          rosdep install --from-paths src --ignore-src -r -y
-
-      - name: Build ROS 2 Workspace
-        run: |
-          source /opt/ros/humble/setup.bash
-          cd ~/ros2_ws
-          colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
       - name: Run Clang-Tidy on C++ code
         run: |
             source /opt/ros/humble/setup.bash
             cd ~/ros2_ws
             find src/ -name '*.cpp' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' | xargs -I{} clang-tidy {} -p build/ -header-filter='.*' -warnings-as-errors='*' --config-file=$GITHUB_WORKSPACE/src/vortex-auv/.clang-tidy
-        
-
-        
