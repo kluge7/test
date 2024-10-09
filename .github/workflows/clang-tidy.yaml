@@ -1,4 +1,4 @@
-name: Clang-Tidy Check
+name: Clang-Tidy Review
 
 on: [pull_request]
 
@@ -29,7 +29,6 @@ jobs:
         run: |
           mkdir -p $GITHUB_WORKSPACE/src
           cd $GITHUB_WORKSPACE/src
-          cp -r $GITHUB_WORKSPACE/* .
           git clone https://github.com/vortexntnu/vortex-msgs.git
 
       - name: Install Package Dependencies with rosdep
@@ -44,18 +43,19 @@ jobs:
           cd $GITHUB_WORKSPACE
           colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
-      - name: Run Clang-Tidy on C++ code
-        run: |
-          source /opt/ros/humble/setup.bash
-          cd $GITHUB_WORKSPACE
-          # Collect source files
-          find src/ -regex '.*\.\(cpp\|c\|cc\|cxx\|hpp\|h\|hh\|hxx\)$' > clang-tidy-files.txt
-          # Run clang-tidy
-          clang-tidy -p build/ -warnings-as-errors='*' --export-fixes=clang-tidy-fixes.yaml -header-filter='.*' -quiet $(cat clang-tidy-files.txt)
-          # Check if clang-tidy reported any errors
-          if [ $? -ne 0 ]; then
-            echo "Clang-Tidy found issues."
-            exit 1
-          else
-            echo "Clang-Tidy did not find any issues."
-          fi
+      - name: Run Clang-Tidy Review
+        uses: ZedThree/clang-tidy-review@v0.14.0
+        id: review
+        with:
+          clang_tidy_version: 16  # Adjust based on your needs
+          max_comments: 25         # Number of comments to post
+          lgtm_comment_body: 'clang-tidy review says "All clean, LGTM! 👍"'  # LGTM comment if no warnings
+          annotations: false       # Disable GitHub Annotations, using comments instead
+
+      - name: Upload Clang-Tidy Fixes
+        uses: ZedThree/clang-tidy-review/upload@v0.14.0
+        id: upload-review
+
+      - name: Fail on Clang-Tidy Warnings
+        if: steps.review.outputs.total_comments > 0
+        run: exit 1
