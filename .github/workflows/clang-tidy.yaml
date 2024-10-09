@@ -57,6 +57,7 @@ jobs:
         id: review
         with:
             max_comments: 25
+            config_file: $GITHUB_WORKSPACE/src/vortex-auv
             annotations: false
 
       - name: Upload Clang-Tidy Fixes
