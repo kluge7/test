@@ -44,16 +44,15 @@ jobs:
           colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Run Clang-Tidy Review
-        uses: ZedThree/clang-tidy-review@v0.14.0
+        uses: ZedThree/clang-tidy-review@v0.19.0
         id: review
         with:
-          clang_tidy_version: 16  # Adjust based on your needs
-          max_comments: 25         # Number of comments to post
-          lgtm_comment_body: 'clang-tidy review says "All clean, LGTM! 👍"'  # LGTM comment if no warnings
-          annotations: false       # Disable GitHub Annotations, using comments instead
+          max_comments: 25
+          lgtm_comment_body: 'clang-tidy review says "All clean, LGTM! 👍"'
+          annotations: false
 
       - name: Upload Clang-Tidy Fixes
-        uses: ZedThree/clang-tidy-review/upload@v0.14.0
+        uses: ZedThree/clang-tidy-review/upload@v0.19.0
         id: upload-review
 
       - name: Fail on Clang-Tidy Warnings
