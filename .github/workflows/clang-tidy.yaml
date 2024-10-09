@@ -1,4 +1,4 @@
-name: Clang-Tidy Check
+name: Clang-Tidy Review
 
 on: [pull_request]
 
@@ -27,26 +27,30 @@ jobs:
 
       - name: Set up ROS 2 Workspace
         run: |
-          mkdir -p ~/ros2_ws/src
-          cd ~/ros2_ws/src
-          cp -r $GITHUB_WORKSPACE/* .
+          mkdir -p $GITHUB_WORKSPACE/src
+          cd $GITHUB_WORKSPACE/src
           git clone https://github.com/vortexntnu/vortex-msgs.git
-          cd ~/ros2_ws
 
       - name: Install Package Dependencies with rosdep
         run: |
           source /opt/ros/humble/setup.bash
-          cd ~/ros2_ws
+          cd $GITHUB_WORKSPACE
           rosdep install --from-paths src --ignore-src -r -y
 
       - name: Build ROS 2 Workspace
         run: |
           source /opt/ros/humble/setup.bash
-          cd ~/ros2_ws
+          cd $GITHUB_WORKSPACE
           colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
-      - name: Run Clang-Tidy on C++ code
-        run: |
-            source /opt/ros/humble/setup.bash
-            cd ~/ros2_ws
-            find src/ -name '*.cpp' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' | xargs -I{} clang-tidy {} -p build/ -header-filter='.*' -warnings-as-errors='*'
+      - name: Run Clang-Tidy Review
+        uses: ZedThree/clang-tidy-review@v0.14.0
+        id: review
+
+      - name: Upload Clang-Tidy Fixes
+        uses: ZedThree/clang-tidy-review/upload@v0.14.0
+        id: upload-review
+
+      - name: Fail on Clang-Tidy Warnings
+        if: steps.review.outputs.total_comments > 0
+        run: exit 1
