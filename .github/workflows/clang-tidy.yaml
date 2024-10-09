@@ -1,77 +1,76 @@
-name: Clang-Tidy Review
+name: Clang-Tidy Check with ROS 2
 
 on: [pull_request]
 
 jobs:
-  clang-tidy:
+  clang-tidy-check:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-      - name: Install ROS 2 Humble
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl gnupg lsb-release
-          sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-          sudo apt-get update
-          sudo apt-get install -y ros-humble-desktop
+    - name: Install ROS 2 Humble
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl gnupg lsb-release
+        sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install -y ros-humble-desktop
 
-      - name: Install Build Tools and Dependencies
-        run: |
-          sudo apt-get install -y python3-colcon-common-extensions python3-rosdep clang-tidy
-          sudo rosdep init
-          rosdep update
+    - name: Install Build Tools and Dependencies
+      run: |
+        sudo apt-get install -y python3-colcon-common-extensions python3-rosdep clang-tidy
+        sudo rosdep init
+        rosdep update
 
-      - name: Set up ROS 2 Workspace
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/src
-          cd $GITHUB_WORKSPACE/src
-          git clone https://github.com/vortexntnu/vortex-msgs.git
+    - name: Set up ROS 2 Workspace
+      run: |
+        mkdir -p $GITHUB_WORKSPACE/src
+        cd $GITHUB_WORKSPACE/src
+        git clone https://github.com/vortexntnu/vortex-msgs.git
 
-      - name: Install Package Dependencies with rosdep
-        run: |
-          source /opt/ros/humble/setup.bash
-          cd $GITHUB_WORKSPACE
-          rosdep install --from-paths src --ignore-src -r -y
+    - name: Install Package Dependencies with rosdep
+      run: |
+        source /opt/ros/humble/setup.bash
+        cd $GITHUB_WORKSPACE
+        rosdep install --from-paths src --ignore-src -r -y
 
-      - name: Build ROS 2 Workspace
-        run: |
-          source /opt/ros/humble/setup.bash
-          cd $GITHUB_WORKSPACE
-          colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    - name: Build ROS 2 Workspace
+      run: |
+        source /opt/ros/humble/setup.bash
+        cd $GITHUB_WORKSPACE
+        colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
-      - name: Verify Compilation Database
-        run: |
-            ls -la $GITHUB_WORKSPACE/build
-            if [ ! -f "$GITHUB_WORKSPACE/build/compile_commands.json" ]; then
-              echo "Compilation database not found!"
+    - name: Verify Compilation Database
+      run: |
+          ls -la $GITHUB_WORKSPACE/build
+          if [ ! -f "$GITHUB_WORKSPACE/build/compile_commands.json" ]; then
+            echo "Compilation database not found!"
+            exit 1
+          fi
+
+    - name: Verify .clang-tidy file
+      run: |
+            echo "Current directory: $GITHUB_WORKSPACE"
+            echo "Listing all files in the current workspace:"
+            ls -la $GITHUB_WORKSPACE
+            if [ ! -f "$GITHUB_WORKSPACE/.clang-tidy" ]; then
+              echo ".clang-tidy file not found!"
               exit 1
+            else
+              echo ".clang-tidy file found!"
             fi
 
-      - name: Verify .clang-tidy file
-        run: |
-              echo "Current directory: $GITHUB_WORKSPACE"
-              echo "Listing all files in the current workspace:"
-              ls -la $GITHUB_WORKSPACE
-              if [ ! -f "$GITHUB_WORKSPACE/.clang-tidy" ]; then
-                echo ".clang-tidy file not found!"
-                exit 1
-              else
-                echo ".clang-tidy file found!"
-              fi
+    - name: Run Clang-Tidy with Annotations
+      uses: ZehMatt/clang-tidy-annotations@v1.0.0
+      with:
+        build_dir: 'build'
+        cmake_args: '-G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++'
 
-
-      - name: Run Clang-Tidy Review
-        uses: ZedThree/clang-tidy-review@v0.19.0
-        id: review
-
-      - name: Upload Clang-Tidy Fixes
-        uses: ZedThree/clang-tidy-review/upload@v0.19.0
-        id: upload-review
-
-      - name: Fail on Clang-Tidy Warnings
-        if: steps.review.outputs.total_comments > 0
-        run: exit 1
+    - name: Check Clang-Tidy Warnings
+      if: failure()
+      run: |
+        echo "Clang-Tidy reported warnings or errors!"
+        exit 1
