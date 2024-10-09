@@ -43,7 +43,7 @@ jobs:
         run: |
           source /opt/ros/humble/setup.bash
           cd ~/ros2_ws
-          cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+          colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Run Clang-Tidy on C++ code
         run: |
