@@ -25,8 +25,8 @@ jobs:
           mkdir ~/ros2_ws/src/$repo_name
           cp -r $GITHUB_WORKSPACE/* ~/ros2_ws/src/$repo_name
 
-          cd ~/ros2_ws/src
-          if [ -f $repo_name/ros2.repos ]; then
+          cd ~/ros2_ws/src/$repo_name
+          if [ -f ros2.repos ]; then
             vcs import < ros2.repos
           fi
 
