@@ -44,7 +44,6 @@ jobs:
           cd vortex-auv
           cp -r $GITHUB_WORKSPACE/* .
           cd ..
-
           # Clone vortex-msgs repository
           git clone https://github.com/vortexntnu/vortex-msgs.git
 
