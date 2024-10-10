@@ -69,15 +69,11 @@ jobs:
           source /opt/ros/humble/setup.bash
           cd ~/ros2_ws
           colcon build
+          ls -la
 
       - name: Make Clang-Tidy Script Executable
         run: |
           chmod +x ~/ros2_ws/src/vortex-auv/scripts/run_clang_tidy.sh
-
-      - name: Check file structure before running clang-tidy
-        run: |
-          echo "Listing ~/ros2_ws/src/vortex-auv/scripts directory contents:"
-          ls -la ~/ros2_ws/src/vortex-auv/scripts
 
       - name: Run Clang-Tidy
         run: |
