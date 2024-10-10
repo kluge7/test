@@ -14,7 +14,8 @@ run_clang_tidy() {
       -p "$compile_commands_json" \
       --warnings-as-errors="*" \
       --header-filter=".*" \
-      --quiet
+
+    echo "$output"
 
     # Check if clang-tidy returned a non-zero exit code, meaning it found an issue
     if [ $? -ne 0 ]; then
