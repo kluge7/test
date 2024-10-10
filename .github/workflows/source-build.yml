@@ -21,14 +21,10 @@ jobs:
       # Step 2: Set up the repository code
       - name: Set up ROS 2 Workspace
         run: |
-          mkdir -p ~/ros2_ws/src
-          cd ~/ros2_ws/src
+          repo_name=$(basename $GITHUB_WORKSPACE)
+          mkdir ~/ros2_ws/src/$repo_name
+          cp -r $GITHUB_WORKSPACE/* ~/ros2_ws/src/$repo_name
 
-          repo_name=$(basename $(pwd))
-          mkdir $repo_name
-          cd $repo_name
-          cp -r $GITHUB_WORKSPACE/* .
-          
           cd ~/ros2_ws/src
           if [ -f $repo_name/ros2.repos ]; then
             vcs import < $repo_name/ros2.repos
