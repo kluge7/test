@@ -1,54 +1,55 @@
-name: Clang-Tidy Review
+name: Clang-Tidy
 
-on: [push]
+on: push
 
 jobs:
-  clang-tidy:
-    runs-on: ubuntu-22.04
+  build-and-lint:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Install ROS 2 Humble
+      - name: Set up ROS 2 and dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y curl gnupg lsb-release
-          sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-          sudo apt-get update
-          sudo apt-get install -y ros-humble-desktop
+          sudo apt update
+          sudo apt install -y colcon-common-extensions clang-tidy
+          sudo apt install -y python3-vcstool  # If you need it for vcs import
 
-      - name: Install Build Tools and Dependencies
+      - name: Install additional dependencies
         run: |
-          sudo apt-get install -y python3-colcon-common-extensions python3-rosdep clang-tidy
-          sudo rosdep init
-          rosdep update
-
-      - name: Set up ROS 2 Workspace
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/src
-          cd $GITHUB_WORKSPACE/src
-          git clone https://github.com/vortexntnu/vortex-msgs.git
-
-      - name: Install Package Dependencies with rosdep
-        run: |
-          source /opt/ros/humble/setup.bash
-          cd $GITHUB_WORKSPACE
+          # If your workspace has dependencies, resolve them
+          vcs import < src/<dependency-file>.repos
           rosdep install --from-paths src --ignore-src -r -y
 
-      - name: Build ROS 2 Workspace
+      - name: Build the project with colcon
         run: |
-          source /opt/ros/humble/setup.bash
           cd $GITHUB_WORKSPACE
           colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Run Clang-Tidy
         run: |
-          ./run_clang_tidy.sh
+          src/vortex-auv/scripts/run_clang_tidy.sh
 
       - name: Check Clang-Tidy Results
         if: failure()
         run: |
           echo "Clang-Tidy has identified issues that need to be resolved. Please review the output."
           exit 1
+
+      - name: Save Clang-Tidy Results
+        if: failure()
+        run: |
+          mkdir -p clang-tidy-results
+          src/vortex-auv/scripts/run_clang_tidy.sh > clang-tidy-results/report.txt
+
+      - name: Upload Clang-Tidy Results
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: clang-tidy-results
+          path: clang-tidy-results
+
+      - name: Final status
+        if: success()
+        run: echo "Pipeline completed successfully!"
