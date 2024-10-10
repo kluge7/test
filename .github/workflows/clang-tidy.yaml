@@ -1,7 +1,6 @@
 name: clang-tidy-check
 
-on:
-  pull_request:
+on: push
 
 jobs:
   clang-tidy-check:
