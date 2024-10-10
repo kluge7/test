@@ -48,6 +48,11 @@ jobs:
           # Go back to workspace root
           cd ~/ros2_ws
 
+      - name: Check file structure after setting up workspace
+        run: |
+          echo "Listing ~/ros2_ws/src/vortex-auv directory contents:"
+          ls -la ~/ros2_ws/src/vortex-auv
+
       - name: Install Package Dependencies with rosdep
         run: |
           source /opt/ros/humble/setup.bash
@@ -60,6 +65,11 @@ jobs:
           cd ~/ros2_ws
           ls
           colcon build
+
+      - name: Check file structure before running clang-tidy
+        run: |
+          echo "Listing ~/ros2_ws/src/vortex-auv/scripts directory contents:"
+          ls -la ~/ros2_ws/src/vortex-auv/scripts
 
       - name: Run Clang-Tidy
         run: |
