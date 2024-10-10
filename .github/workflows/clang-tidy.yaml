@@ -45,13 +45,15 @@ jobs:
           # Clone vortex-msgs repository
           git clone https://github.com/vortexntnu/vortex-msgs.git
 
+          ls -la
+
           # Go back to workspace root
           cd ~/ros2_ws
 
       - name: Check file structure after setting up workspace
         run: |
           echo "Listing ~/ros2_ws/src/vortex-auv directory contents:"
-          ls -la ~/ros2_ws/src/vortex-auv
+          ls -la
 
       - name: Install Package Dependencies with rosdep
         run: |
