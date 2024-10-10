@@ -47,4 +47,3 @@ jobs:
         uses: ZehMatt/clang-tidy-annotations@v1.0.0
         with:
           build_dir: 'build'
-          cmake_args: '-G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++'
