@@ -1,47 +1,44 @@
-name: Humble Binary Build
-# author: Denis Štogl <denis@stoglrobotics.de>
-# description: 'Build & test all dependencies from released (binary) packages.'
+name: Source Build
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - humble
-    paths:
-      - '**.hpp'
-      - '**.h'
-      - '**.cpp'
-      - '**.py'
-      - '.github/workflows/humble-binary-build.yml'
-      - '**/package.xml'
-      - '**/CMakeLists.txt'
-      - 'ros2_control-not-released.humble.repos'
   push:
-    branches:
-      - humble
-    paths:
-      - '**.hpp'
-      - '**.h'
-      - '**.cpp'
-      - '**.py'
-      - '.github/workflows/humble-binary-build.yml'
-      - '**/package.xml'
-      - '**/CMakeLists.txt'
-      - 'ros2_control-not-released.humble.repos'
   schedule:
-    # Run every morning to detect flakiness and broken dependencies
-    - cron: '03 1 * * *'
+    # Run every day to detect flakiness and broken dependencies
+    - cron: '03 3 * * *'
 
 jobs:
-  binary:
-    uses: ros-controls/ros2_control_ci/.github/workflows/reusable-industrial-ci-with-cache.yml@master
-    strategy:
-      fail-fast: false
-      matrix:
-        ROS_DISTRO: [humble]
-        ROS_REPO: [main, testing]
-    with:
-      ros_distro: ${{ matrix.ROS_DISTRO }}
-      ros_repo: ${{ matrix.ROS_REPO }}
-      upstream_workspace: ros2_control-not-released.${{ matrix.ROS_DISTRO }}.repos
-      ref_for_scheduled_build: humble
+  source_build:
+    name: Humble Ubuntu 22.04 Build
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Setup ROS2 Humble Environment
+        uses: ros-tooling/setup-ros@0.7.9
+        with:
+          use-ros2-testing: true
+          required-ros-distributions: humble
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3-colcon-common-extensions
+          vcs import < src/${{ github.repository }}/ros2_control.humble.repos
+
+      - name: Build ROS2 Workspace
+        run: |
+          colcon build --event-handlers console_cohesion+
+
+      - name: Run Tests
+        run: |
+          colcon test --event-handlers console_cohesion+
+          colcon test-result --verbose
+
+      - name: Upload Build Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: colcon-logs-humble-ubuntu-22.04
+          path: ros_ws/log
