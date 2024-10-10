@@ -71,6 +71,10 @@ jobs:
           ls
           colcon build
 
+      - name: Make Clang-Tidy Script Executable
+        run: |
+          chmod +x ~/ros2_ws/src/vortex-auv/scripts/run_clang_tidy.sh
+
       - name: Check file structure before running clang-tidy
         run: |
           echo "Listing ~/ros2_ws/src/vortex-auv/scripts directory contents:"
