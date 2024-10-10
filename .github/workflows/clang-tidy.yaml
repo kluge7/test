@@ -43,13 +43,6 @@ jobs:
           mkdir -p clang-tidy-results
           src/vortex-auv/scripts/run_clang_tidy.sh > clang-tidy-results/report.txt
 
-      - name: Upload Clang-Tidy Results
-        if: failure()
-        uses: actions/upload-artifact@v2
-        with:
-          name: clang-tidy-results
-          path: clang-tidy-results
-
       - name: Final status
         if: success()
         run: echo "Pipeline completed successfully!"
