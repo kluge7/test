@@ -63,13 +63,10 @@ jobs:
           cd ~/ros2_ws
           colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
-      - name: Make Clang-Tidy Script Executable
-        run: |
-          chmod +x src/vortex-auv/scripts/run_clang_tidy.sh
-
       - name: Run Clang-Tidy
         run: |
           cd ~/ros2_ws
+          chmod +x src/vortex-auv/scripts/run_clang_tidy.sh
           ./src/vortex-auv/scripts/run_clang_tidy.sh
 
       - name: Final status
