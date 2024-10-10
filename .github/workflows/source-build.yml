@@ -9,7 +9,7 @@ on:
 
 jobs:
   source_build:
-    name: Humble Ubuntu 22.04 Build
+    name: Ubuntu 22.04 Build
     runs-on: ubuntu-22.04
 
     steps:
@@ -26,7 +26,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y python3-colcon-common-extensions
-          vcs import < src/${{ github.repository }}/vortex_auv.repos
+          vcs import < src/${{ github.repository }}/ros2.repos
 
       - name: Build ROS2 Workspace
         run: |
