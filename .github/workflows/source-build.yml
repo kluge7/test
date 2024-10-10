@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   push:
   schedule:
-    # Run every day to detect flakiness and broken dependencies
     - cron: '03 3 * * *'
 
 jobs:
@@ -13,14 +12,17 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      # Step 1: Set up the ROS2 environment (this installs ROS2, colcon, rosdep, vcs, etc.)
       - name: Setup ROS2 Humble Environment
         uses: ros-tooling/setup-ros@0.7.9
         with:
           required-ros-distributions: humble
 
+      # Step 2: Check out the repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Step 3: Set up the workspace and import any external repositories using the .repos file
       - name: Set Up ROS2 Workspace
         run: |
           mkdir -p ros_ws/src
@@ -28,28 +30,26 @@ jobs:
           cd ros_ws/src
           vcs import --input ros2.repos
 
+      # Step 4: Install additional dependencies using rosdep
       - name: Install Dependencies
         run: |
-          sudo apt update
-          sudo apt install -y python3-colcon-common-extensions
-          sudo rosdep init || echo "rosdep already initialized"
           rosdep update
-          cd ros_ws
           rosdep install --from-paths src --ignore-src --rosdistro humble -r -y
 
+      # Step 5: Build the ROS2 workspace
       - name: Build ROS2 Workspace
         run: |
-          source /opt/ros/humble/setup.bash
           cd ros_ws
           colcon build --event-handlers console_cohesion+
 
+      # Step 6: Run tests on the workspace
       - name: Run Tests
         run: |
-          source /opt/ros/humble/setup.bash
           cd ros_ws
           colcon test --event-handlers console_cohesion+
           colcon test-result --verbose
 
+      # Step 7: Upload the build logs as an artifact
       - name: Upload Build Logs
         uses: actions/upload-artifact@v4
         with:
