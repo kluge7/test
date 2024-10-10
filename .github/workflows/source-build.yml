@@ -26,6 +26,9 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y python3-colcon-common-extensions
+          sudo rosdep init || echo "rosdep already initialized"
+          rosdep update
+          rosdep install --from-paths src --ignore-src --rosdistro humble -r -y
           vcs import < ros2.repos
 
       - name: Build ROS2 Workspace
