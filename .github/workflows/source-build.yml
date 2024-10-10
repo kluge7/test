@@ -16,24 +16,37 @@ jobs:
       - name: Setup ROS2 Humble Environment
         uses: ros-tooling/setup-ros@0.7.9
         with:
-          use-ros2-testing: true
           required-ros-distributions: humble
 
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Set Up ROS2 Workspace
+        run: |
+          mkdir -p ros_ws/src
+          mv * ros_ws/src/  # Move all files into src
+          cd ros_ws/src
+          vcs import --input ros2.repos
+
       - name: Install Dependencies
         run: |
           sudo apt update
           sudo apt install -y python3-colcon-common-extensions
-          vcs import < ros2.repos
+          sudo rosdep init || echo "rosdep already initialized"
+          rosdep update
+          cd ros_ws
+          rosdep install --from-paths src --ignore-src --rosdistro humble -r -y
 
       - name: Build ROS2 Workspace
         run: |
+          source /opt/ros/humble/setup.bash
+          cd ros_ws
           colcon build --event-handlers console_cohesion+
 
       - name: Run Tests
         run: |
+          source /opt/ros/humble/setup.bash
+          cd ros_ws
           colcon test --event-handlers console_cohesion+
           colcon test-result --verbose
 
