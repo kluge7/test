@@ -72,13 +72,11 @@ jobs:
         id: review
         with:
           build_dir: 'build'
-          source_dir: 'src'
-          file_filter: cpp,h,hpp,c,cc,cxx,hxx
-          clang_tidy_file: '.clang-tidy'
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Clang-Tidy Fixes
         uses: ZedThree/clang-tidy-review/upload@v0.14.0
         id: upload-review
 
-      - name: Fail
+      - name: Fail if Clang-Tidy Finds Issues
+        if: steps.review.outputs.total_comments > 0
+        run: exit 1
