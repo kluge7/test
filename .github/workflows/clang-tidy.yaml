@@ -58,23 +58,12 @@ jobs:
         run: |
           source /opt/ros/humble/setup.bash
           cd ~/ros2_ws
-          colcon build --event-handlers console_cohesion+
-
-      - name: Run Tests
-        run: |
-          source /opt/ros/humble/setup.bash
-          cd ~/ros2_ws
-          colcon test --event-handlers console_direct+
-
-      - name: Test Results Summary
-        run: |
-          cd ~/ros2_ws
-          colcon test-result --verbose
-
+          colcon build
 
       - name: Run Clang-Tidy
         run: |
-          src/vortex-auv/scripts/run_clang_tidy.sh
+          cd ~/ros2_ws/src/vortex-auv/scripts
+          ./run_clang_tidy.sh
 
       - name: Final status
         if: success()
