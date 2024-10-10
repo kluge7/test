@@ -63,6 +63,11 @@ jobs:
           cd ~/ros2_ws
           colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
+      - name: Copy .clang-tidy to root
+        run: |
+           cd ~/ros2_ws
+           cp ./src/vortex-auv/.clang-tidy ./
+
       - name: Run Clang-Tidy
         run: |
           cd ~/ros2_ws

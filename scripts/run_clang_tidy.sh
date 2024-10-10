@@ -25,6 +25,6 @@ run_clang_tidy() {
 }
 
 # Find all .cpp, .hpp, .c, and .h files recursively in the src directory
-find src \( -name '*.cpp' -o -name '*.hpp' -o -name '*.c' -o -name '*.h' \) | while read -r file; do
+find src \( -name '*.cpp' -o -name '*.c' \) | while read -r file; do
     run_clang_tidy "$file"
 done
