@@ -68,7 +68,6 @@ jobs:
         run: |
           source /opt/ros/humble/setup.bash
           cd ~/ros2_ws
-          ls
           colcon build
 
       - name: Make Clang-Tidy Script Executable
