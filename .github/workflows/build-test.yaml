@@ -39,8 +39,14 @@ jobs:
           mkdir -p ~/ros2_ws/src
           cd ~/ros2_ws/src
 
+          # Extract the repo name from GITHUB_REPOSITORY
+          REPO_NAME=$(basename $GITHUB_REPOSITORY)
+
           # Copy the repository code to the workspace src folder
+          mkdir $REPO_NAME
+          cd $REPO_NAME
           cp -r $GITHUB_WORKSPACE/* .
+          cd ..
 
           # Clone vortex-msgs repository
           git clone https://github.com/vortexntnu/vortex-msgs.git

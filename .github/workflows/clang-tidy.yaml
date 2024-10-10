@@ -82,8 +82,8 @@ jobs:
 
       - name: Run Clang-Tidy
         run: |
-          cd ~/ros2_ws/src/vortex-auv/scripts
-          ./run_clang_tidy.sh
+          cd ~/ros2_ws
+          ./src/vortex-auv/scripts/run_clang_tidy.sh
 
       - name: Final status
         if: success()
