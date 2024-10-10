@@ -21,32 +21,43 @@ jobs:
       # Step 2: Check out the repository
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          path: .
 
       # Step 3: Set up the workspace and import any external repositories using the .repos file
       - name: Set Up ROS2 Workspace
         run: |
-          mkdir -p ros_ws/src
-          mv $(ls -A | grep -v '^ros_ws$') ros_ws/src/
-          cd ros_ws/src
-          vcs import --input ros2.repos
+          # Create the workspace directories
+          mkdir -p ~/ros2_ws/src
+          
+          # Move the contents of the cloned repository into a folder named after the repository
+          repo_name=$(basename $(pwd))
+          mv $(ls -A | grep -v '^ros2_ws$') ~/ros2_ws/src/$repo_name
+          
+          # Change directory to src and import any external repositories from the .repos file
+          cd ~/ros2_ws/src
+          if [ -f $repo_name/ros2.repos ]; then
+            vcs import < $repo_name/ros2.repos
+          fi
 
 
       # Step 4: Install additional dependencies using rosdep
       - name: Install Dependencies
         run: |
+          cd ~/ros2_ws
           rosdep update
           rosdep install --from-paths src --ignore-src --rosdistro humble -r -y
 
       # Step 5: Build the ROS2 workspace
       - name: Build ROS2 Workspace
         run: |
-          cd ros_ws
+          cd ~/ros2_ws
           colcon build --event-handlers console_cohesion+
 
       # Step 6: Run tests on the workspace
       - name: Run Tests
         run: |
-          cd ros_ws
+          cd ~/ros2_ws
           colcon test --event-handlers console_cohesion+
           colcon test-result --verbose
 
