@@ -2,4 +2,4 @@ repositories:
   vortex_msgs:
     type: git
     url: https://github.com/vortexntnu/vortex-msgs.git
-    version: main  # You can specify a branch, tag, or commit hash here
+    version: master
