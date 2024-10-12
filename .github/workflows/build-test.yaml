@@ -19,8 +19,8 @@ jobs:
 
       - name: Import dependencies with vcs
         run: |
-          cd ${{ github.workspace }}/ros2_ws/src/${{ github.event.repository.name }}
-          vcs import . < ros2.repos
+          cd ${{ github.workspace }}/ros2_ws/src
+          vcs import . < ${{ github.workspace }}/ros2_ws/src/${{ github.event.repository.name }}/ros2.repos
 
       - name: Install Package Dependencies with rosdep
         run: |
