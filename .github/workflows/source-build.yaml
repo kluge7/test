@@ -1,7 +1,7 @@
 name: Source Build
 
 on:
-    pull_request:
+    push:
 
     # to check for dependency issues or flaking tests
     schedule:
