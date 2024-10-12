@@ -17,6 +17,8 @@ jobs:
 
       - name: Set up ROS 2 Workspace
         run: |
+          rosdep update
+
           mkdir -p ~/ros2_ws/src
           cd ~/ros2_ws/src
 
@@ -31,6 +33,8 @@ jobs:
 
           # Clone vortex-msgs repository
           git clone https://github.com/vortexntnu/vortex-msgs.git
+
+          ls -l
 
           # Go back to workspace root
           cd ~/ros2_ws
