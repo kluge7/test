@@ -15,7 +15,7 @@ jobs:
       - name: Import dependencies using vcs
         run: |
           ls -l
-          cd ros2_ws/src
+          cd ~/ros2_ws/src
           ls -l
           mkdir -p ros2_ws/src  # Create the workspace structure
           cd ros2_ws/src
