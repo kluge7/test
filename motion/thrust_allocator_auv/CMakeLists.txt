@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
+
+# Enable export of compile_commands.json for clang-tidy and other tools
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 project(thrust_allocator_auv)
 
 # Default to C++14
@@ -19,15 +23,15 @@ find_package(Eigen3 REQUIRED)
 
 include_directories(include)
 
-add_executable(${PROJECT_NAME}_node 
-  src/thrust_allocator_auv_node.cpp 
-  src/thrust_allocator_ros.cpp 
+add_executable(${PROJECT_NAME}_node
+  src/thrust_allocator_auv_node.cpp
+  src/thrust_allocator_ros.cpp
   src/pseudoinverse_allocator.cpp
 )
 
-ament_target_dependencies(${PROJECT_NAME}_node 
-  rclcpp 
-  geometry_msgs 
+ament_target_dependencies(${PROJECT_NAME}_node
+  rclcpp
+  geometry_msgs
   vortex_msgs
   Eigen3
 )

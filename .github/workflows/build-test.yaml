@@ -1,0 +1,63 @@
+name: Build and Test
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install ROS 2 Environment
+        uses: ros-tooling/setup-ros@v0.7  # Pin to a specific version for stability
+        with:
+          required-ros-distributions: humble  # Install ROS 2 Humble distribution
+
+      - name: Set up ROS 2 Workspace
+        run: |
+          rosdep update
+
+          mkdir -p ~/ros2_ws/src
+          cd ~/ros2_ws/src
+
+          # Extract the repo name from GITHUB_REPOSITORY
+          REPO_NAME=$(basename $GITHUB_REPOSITORY)
+
+          # Copy the repository code to the workspace src folder
+          mkdir $REPO_NAME
+          cd $REPO_NAME
+          cp -r $GITHUB_WORKSPACE/* .
+          cd ..
+
+          # Clone vortex-msgs repository
+          git clone https://github.com/vortexntnu/vortex-msgs.git
+
+          ls -l
+
+          # Go back to workspace root
+          cd ~/ros2_ws
+
+      - name: Install Package Dependencies with rosdep
+        run: |
+          source /opt/ros/humble/setup.bash
+          cd ~/ros2_ws
+          rosdep install --from-paths src --ignore-src -r -y
+
+      - name: Build ROS 2 Workspace
+        run: |
+          source /opt/ros/humble/setup.bash
+          cd ~/ros2_ws
+          colcon build --event-handlers console_cohesion+
+
+      - name: Run Tests
+        run: |
+          source /opt/ros/humble/setup.bash
+          cd ~/ros2_ws
+          colcon test --event-handlers console_direct+
+
+      - name: Test Results Summary
+        run: |
+          cd ~/ros2_ws
+          colcon test-result --verbose
