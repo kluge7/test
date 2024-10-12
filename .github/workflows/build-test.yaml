@@ -14,6 +14,7 @@ jobs:
 
       - name: Import dependencies using vcs
         run: |
+          mkdir -p ~/ros2_ws/src
           cd ~/ros2_ws
 
           # Dynamically get the repo name from GITHUB_REPOSITORY
