@@ -16,6 +16,7 @@ jobs:
         run: |
           mkdir -p ~/ros2_ws/src
           cd ~/ros2_ws
+          ls -l src
 
           # Dynamically get the repo name from GITHUB_REPOSITORY
           REPO_NAME=$(basename ${{ github.repository }})

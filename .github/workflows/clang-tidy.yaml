@@ -1,6 +1,6 @@
 name: clang-tidy and Test
 
-on: [push]
+on: []
 
 jobs:
   build:
