@@ -14,18 +14,12 @@ jobs:
 
       - name: Import dependencies using vcs
         run: |
-          ls -l
-          cd ~/ros2_ws/src
-          ls -l
-          mkdir -p ros2_ws/src  # Create the workspace structure
-          cd ros2_ws/src
-          ls -l
+          ls -l ${{ github.workspace }}/ros2_ws/src/${{ github.event.repository.name }}
 
-          # Dynamically get the repo name from GITHUB_REPOSITORY
-          REPO_NAME=$(basename ${{ github.repository }})
+          cd ${{ github.workspace }}/ros2_ws/src
 
           # Import repositories listed in the .repos file
-          vcs import src < ros2/src/$REPO_NAME/ros2.repos
+          vcs import src < ${{ github.workspace }}/ros2_ws/src/${{ github.event.repository.name }}/ros2.repos
 
       - name: Setup ROS 2 Environment
         uses: ros-tooling/setup-ros@v0.7
