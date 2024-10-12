@@ -10,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          path: ~ros2_ws/src/$(basename ${{ github.repository }})
+          path: ros2_ws/src/$(basename ${{ github.repository }})
 
       - name: Import dependencies using vcs
         run: |
