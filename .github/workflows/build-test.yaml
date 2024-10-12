@@ -14,7 +14,9 @@ jobs:
 
       - name: Import dependencies using vcs
         run: |
-          cd ~/ros2_ws
+          ls -l
+          mkdir -p ros2_ws/src  # Create the workspace structure
+          cd ros2_ws
           ls -l
 
           # Dynamically get the repo name from GITHUB_REPOSITORY
