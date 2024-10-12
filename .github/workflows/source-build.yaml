@@ -1,11 +1,11 @@
 name: Source Build
 
 on:
-    push:
+  push:
 
-    # to check for dependency issues or flaking tests
-    schedule:
-     - cron: "0 3 * * *"
+  # runs daily to check for dependency issues or flaking tests
+  schedule:
+    - cron: "0 3 * * *"
 
 jobs:
   build:
@@ -26,6 +26,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}/ros2_ws/src
           vcs import . < ${{ github.workspace }}/ros2_ws/src/${{ github.event.repository.name }}/ros2.repos
+          ls -la
 
       - name: Install Package Dependencies with rosdep
         run: |
