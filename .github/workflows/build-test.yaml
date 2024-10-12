@@ -19,34 +19,30 @@ jobs:
 
       - name: Import dependencies using vcs
         run: |
-          ls -l ${{ github.workspace }}/ros2_ws/src/${{ github.event.repository.name }}
-
-          cd ${{ github.workspace }}/ros2_ws/src
-
-          # Import repositories listed in the .repos file
+          cd ${{ github.workspace }}/ros2_ws
           vcs import src < ${{ github.workspace }}/ros2_ws/src/${{ github.event.repository.name }}/ros2.repos
 
       - name: Install Package Dependencies with rosdep
         run: |
-          cd ~/ros2_ws
+          cd ${{ github.workspace }}/ros2_ws
           source /opt/ros/humble/setup.bash
           rosdep update
           rosdep install --from-paths src --ignore-src -r -y
 
       - name: Build ROS 2 Workspace
         run: |
-          cd ~/ros2_ws
+          cd ${{ github.workspace }}/ros2_ws
           source /opt/ros/humble/setup.bash
           colcon build --event-handlers console_cohesion+
 
       - name: Run Tests
         run: |
-          cd ~/ros2_ws
+          cd ${{ github.workspace }}/ros2_ws
           source /opt/ros/humble/setup.bash
           colcon test --event-handlers console_direct+
 
       - name: Test Results Summary
         run: |
-          cd ~/ros2_ws
+          cd ${{ github.workspace }}/ros2_ws
           source /opt/ros/humble/setup.bash
           colcon test-result --verbose
