@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: ~src/ros2
 
       - name: Import dependencies using vcs
         run: |
