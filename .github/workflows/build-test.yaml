@@ -10,10 +10,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          path: ~src/ros2
+          path: ~src/$(basename ${{ github.repository }})
 
       - name: Import dependencies using vcs
         run: |
+          ls -l
+          cd src
           ls -l
           mkdir -p ros2_ws/src  # Create the workspace structure
           cd ros2_ws/src
