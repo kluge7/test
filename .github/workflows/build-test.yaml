@@ -10,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          path: ros2_ws/src
+          path: ros2_ws/src/$GITHUB_REPOSITORY
 
       - name: Import dependencies using vcs
         run: |
