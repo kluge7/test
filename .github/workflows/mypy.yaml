@@ -33,7 +33,7 @@ jobs:
           if [ -z "$CHANGED_FILES" ]; then
             echo "No Python files changed."
             exit 0
-          fi
+          fi 
 
           # Initialize a variable to collect exit codes
           EXIT_CODE=0
