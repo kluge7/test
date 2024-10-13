@@ -2,7 +2,6 @@ name: Source Build
 
 on:
   workflow_dispatch:
-  push:
   schedule:
     - cron: '03 3 * * *'
 
