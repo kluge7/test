@@ -20,7 +20,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'schedule' && 'main' || github.head_ref }}
           path: ros2_ws/src/${{ github.event.repository.name }}
 
       - name: Import Dependencies with vcs
