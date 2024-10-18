@@ -16,7 +16,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          style: 'file' 
+          style: 'file'
           tidy-checks: '' # Use .clang-tidy config file
           thread-comments: false  # Disables the thread comments
           file-annotations: true  # Enables file annotations on specific lines with issues

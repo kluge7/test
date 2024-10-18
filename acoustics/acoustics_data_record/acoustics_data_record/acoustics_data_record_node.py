@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 
 # ROS2 libraries
-import rclpy
-from rclpy.node import Node
-from std_msgs.msg import Float32MultiArray, Int32MultiArray
-from ament_index_python.packages import get_package_share_directory
-
 # Python libraries
 import array
-## 
+
+import rclpy
+
+##
 # Custom libraries
 from acoustics_data_record_lib import AcousticsDataRecordLib
+from ament_index_python.packages import get_package_share_directory
+from rclpy.node import Node
+from std_msgs.msg import Float32MultiArray, Int32MultiArray
 
 
 class AcousticsDataRecordNode(Node):
     def __init__(self):
-        # Variables for seting upp loging correctly
+        # Variables for setting upp loging correctly
         hydrophoneDataSize = (
             2**10
         ) * 3  # 1 hydrophone buffer is 2^10 long, Each hydrophone data has 3 buffers full of this data
@@ -23,7 +24,7 @@ class AcousticsDataRecordNode(Node):
         TDOADataSize = (
             5  # TDOA (Time Difference Of Arrival) has 5 hydrophones it has times for
         )
-        positionDataSize = 3  # position only has X, Y, Z basicaly 3 elements
+        positionDataSize = 3  # position only has X, Y, Z basically 3 elements
 
         # Initialize ROS2 node
         super().__init__("acoustics_data_record_node")
@@ -109,7 +110,7 @@ class AcousticsDataRecordNode(Node):
         # Logs all the newest data 1 time(s) per second
         self.declare_parameter(
             "acoustics.data_logging_rate", 1.0
-        )  # Providing a default value 1.0 => 1 samplings per second, verry slow
+        )  # Providing a default value 1.0 => 1 samplings per second, very slow
         DATA_LOGING_RATE = (
             self.get_parameter("acoustics.data_logging_rate")
             .get_parameter_value()
@@ -118,7 +119,7 @@ class AcousticsDataRecordNode(Node):
         timer_period = 1.0 / DATA_LOGING_RATE
         self.logger_timer = self.create_timer(timer_period, self.logger)
 
-        # Debuging ----------
+        # Debugging ----------
         self.get_logger().info(
             "Started logging data for topics: \n"
             "/acoustics/hydrophone1 [Int32MultiArray] \n"

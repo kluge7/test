@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 ##
 # ROS2 Libraries
-import rclpy
 import array
-from rclpy.node import Node
+
+import rclpy
 from ament_index_python.packages import get_package_share_directory
+from blackbox.blackbox_log_data import BlackBoxLogData
+from rclpy.node import Node
+
 ####
 # ROS2 Topic Libraries
 from std_msgs.msg import Float32, Int16MultiArray
 
 # Custom Libraries
 from vortex_msgs.msg import ThrusterForces
-from blackbox.blackbox_log_data import BlackBoxLogData
 
 
 class BlackBoxNode(Node):
@@ -70,7 +72,7 @@ class BlackBoxNode(Node):
         # Logs all the newest data 10 times per second
         self.declare_parameter(
             "blackbox.data_logging_rate", 1.0
-        )  # Providing a default value 1.0 => 1 samplings per second, verry slow
+        )  # Providing a default value 1.0 => 1 samplings per second, very slow
         DATA_LOGING_RATE = (
             self.get_parameter("blackbox.data_logging_rate")
             .get_parameter_value()
@@ -79,7 +81,7 @@ class BlackBoxNode(Node):
         timer_period = 1.0 / DATA_LOGING_RATE
         self.logger_timer = self.create_timer(timer_period, self.logger)
 
-        # Debuging ----------
+        # Debugging ----------
         self.get_logger().info(
             "Started logging data for topics: \n"
             "/auv/power_sense_module/current [Float32] \n"

@@ -1,8 +1,7 @@
 # Setting up libraries
-from socket import socket, AF_INET, SOCK_DGRAM
 import errno
 import time
-from socket import error
+from socket import AF_INET, SOCK_DGRAM, error, socket
 
 
 class TeensyCommunicationUDP:
@@ -23,7 +22,7 @@ class TeensyCommunicationUDP:
         _timeoutMax (int): time to wait before retrying handshake
         _data_string (str): buffer for received teensy data
         _data_target (str): the field of `acoustics_data` that is written to
-        acoustics_data (dict[str, list[int]]): containter for data from teensy
+        acoustics_data (dict[str, list[int]]): container for data from teensy
 
     Methods:
     --------
@@ -224,7 +223,7 @@ class TeensyCommunicationUDP:
         """
         try:
             cls._clientSocket.sendto(cls._INITIALIZATION_MESSAGE.encode(), cls._address)
-            print("DEBUGING: Sent acknowledge package")
+            print("DEBUGGING: Sent acknowledge package")
         except Exception as e:
             print("Error from send_acknowledge_signal")
             print(e)

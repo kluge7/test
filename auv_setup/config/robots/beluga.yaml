@@ -1,6 +1,6 @@
 # This file defines parameters specific to Beluga
 #
-# When looking at the AUV from above, the thruster placement is:   
+# When looking at the AUV from above, the thruster placement is:
 #
 #        front
 #       |======|
@@ -42,15 +42,15 @@ propulsion:
        [ 0.00000,  1.00000,  1.00000,  0.00000,  0.00000,  1.00000,  1.00000, 0.00000], # Heave
 
        [ 0.00000, -0.20600, -0.20600,  0.00000,  0.00000, 0.20600,  0.20600,  0.00000 ], # Roll
-       [ 0.00000, -0.09600,  0.09600,  0.00000,  0.00000, 0.09600, -0.09600,  0.00000 ], # Pitch 
+       [ 0.00000, -0.09600,  0.09600,  0.00000,  0.00000, 0.09600, -0.09600,  0.00000 ], # Pitch
        [0.30000, 0.00000,  0.00000,  0.30000,  -0.30000,  0.00000,  0.00000, -0.30000 ]] # Yaw
 
     rate_of_change:
       max: 1 # Maximum rate of change in newton per second for a thruster
-    map:       [  4,  6,  7,  0,  3,  1,  2,  5 ] # [ 0, 1, 2, 3, 4, 5, 6, 7 ]  
+    map:       [  4,  6,  7,  0,  3,  1,  2,  5 ] # [ 0, 1, 2, 3, 4, 5, 6, 7 ]
     direction: [  1, -1,  1,  1, -1,  1,  1, -1 ]
     offset:    [ 80, 80, 80, 80, 80, 80, 80, 80 ] # Offset IN PWM -400 to 400 # Offset moves where the thrust is at rest
-    thrust_range: [-0.7, 0.7] # range in percentage -1.0 to 1.0 # NOTE!: thrust_range moves with the offset, if the offset is too big e.g., ± ~400 the thrust range will go out of bounds 
+    thrust_range: [-0.7, 0.7] # range in percentage -1.0 to 1.0 # NOTE!: thrust_range moves with the offset, if the offset is too big e.g., ± ~400 the thrust range will go out of bounds
 
 guidance:
   dp:
@@ -62,19 +62,19 @@ guidance:
     delta: 0.7
     odom_topic: "/odometry/filtered"
     action_server: "/guidance_interface/los_server"
-  vel: 
+  vel:
     rate: 20
   joy:
     thrust_topic: "/thrust/joy"
-  
+
 
 controllers:
   dp:
     thrust_topic: "/thrust/dp"
     odometry_topic: "/odometry/filtered"
-    velocity_gain: 1.0    # lower (1.0) is good when using slightly noisy state estimates  
-    position_gain: 35.0 
-    attitude_gain: 7.5  
+    velocity_gain: 1.0    # lower (1.0) is good when using slightly noisy state estimates
+    position_gain: 35.0
+    attitude_gain: 7.5
     integral_gain: 0.065
   los_controller: # Note: Not loaded by the backstepping/pid controllers yet! Make sure to do this after tuning with dyn. reconf.
     PID:
@@ -104,11 +104,11 @@ controllers:
     odometry_topic: "/odometry/filtered"
     sphere_of_acceptence: 0.2
     control_input_saturation_limits: [-10.5, 10.5]
-    control_forces_weights: [0.1, 0.1, 0.1, 10, 10, 1] # Weigths for what DOF is prioritized when allocation control forces. Leave 
+    control_forces_weights: [0.1, 0.1, 0.1, 10, 10, 1] # Weights for what DOF is prioritized when allocation control forces. Leave
     control_bandwidth: [0.6, 1, 0.6, 0.6, 0.6, 0.6]   # Tune the PID control bandwidths for [surge, sway, heave, roll, pitch, yaw]. NB! roll and pitch are redundant
     relative_damping_ratio: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0] # Leave
     absolute_relative_velocity_limit: 0.5 # Leave
-    reference_model_control_bandwidth_gain: 0.5 # <= 1 # Leave 
+    reference_model_control_bandwidth_gain: 0.5 # <= 1 # Leave
     reference_model_control_input_saturation_limit_gain: 0.8 # <= 1 Leave
     virtual_target_controller_bandwidths: [1, 1, 0.75, 1, 1, 1.5]  # Tune the path following precision for [surge, sway, heave, roll, pitch, yaw]  NB! roll and pitch are redundant. Higher values gives better precision
     virtual_target_along_track_speed_saturation_limits: [-0.2, 0.2] # <= 1 Speed saturation limits for the virtual target along the path
@@ -152,7 +152,7 @@ controllers:
 
 thrust:
   thrust_topic: "/thrust/desired_forces"
-        
+
 joystick:
   scaling:
     surge: 60
@@ -187,7 +187,7 @@ battery:
     interval: 10   # Seconds
 
 pressure:
-  thresholds: 
+  thresholds:
     critical: 1013.25 # hPa
   system:
     interval: 0.5 # seconds
@@ -197,7 +197,7 @@ pressure:
 temperature:
   logging:
     interval: 10    # Seconds
-      
+
 i2c:
   pca9685:
     address: 0x40
@@ -209,7 +209,7 @@ i2c:
 
 pca9685:
   pwm:
-    bits_per_period: 4095 
+    bits_per_period: 4095
     frequency: 50.0
     frequency_measured: 50 # 51.6 is the former value, but we dont know why
 
@@ -229,12 +229,12 @@ ping360_node:
   speedOfSound: 1500
   queueSize: 1
   threshold: 100
-  enableImageTopic: True 
-  enableScanTopic: True 
-  enableDataTopic: True 
-  maxAngle: 400 
-  minAngle: 0 
-  oscillate: False 
+  enableImageTopic: True
+  enableScanTopic: True
+  enableDataTopic: True
+  maxAngle: 400
+  minAngle: 0
+  oscillate: False
 
 torpedo:
   gpio_pin: 15

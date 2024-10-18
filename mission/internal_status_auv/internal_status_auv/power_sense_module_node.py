@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 # ROS2 Libraries
-import rclpy
-from rclpy.node import Node
-from rclpy.logging import get_logger
-from std_msgs.msg import Float32
-
 # Custom Libraries
 import internal_status_auv.power_sense_module_lib
+import rclpy
+from rclpy.logging import get_logger
+from rclpy.node import Node
+from std_msgs.msg import Float32
 
 
 class PowerSenseModulePublisher(Node):
@@ -66,7 +65,7 @@ class PowerSenseModulePublisher(Node):
             warning_timer_period, self.warning_timer_callback
         )
 
-        # Debuging ----------
+        # Debugging ----------
         self.get_logger().info('"power_sense_module_publisher" has been started')
 
     def read_timer_callback(self):

@@ -2,14 +2,15 @@
 # Python Libraries
 from time import sleep
 
+from IP_lib import IPDriver
+
 # Custom Libraries
 from LCD_lib import LCDScreenDriver
-from IP_lib import IPDriver
 from power_sense_module_lib import PowerSenseModule
 from pressure_sensor_lib import PressureSensor
 from temperature_sensor_lib import TemperatureSensor
 
-# Initialize all necesarry drivers/libraries for the display and functionality
+# Initialize all necessary drivers/libraries for the display and functionality
 LCD = LCDScreenDriver()
 IP = IPDriver()
 PSM = PowerSenseModule()
@@ -17,7 +18,7 @@ Pressure = PressureSensor()
 Temperature = TemperatureSensor()
 
 
-# Formating function for nices LCD screen layout
+# Formatting function for nices LCD screen layout
 def format_line(value: str, unit: str):
     spacesAvailable = 16
     valueLenght = len(value)

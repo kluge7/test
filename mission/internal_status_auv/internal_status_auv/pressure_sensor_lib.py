@@ -2,9 +2,10 @@
 # Python Libraries
 import time
 
+import adafruit_mprls  # ! NOTE: sudo pip3 install adafruit-circuitpython-mprls
+
 # Pressure sensor Libraries
 import board
-import adafruit_mprls  # ! NOTE: sudo pip3 install adafruit-circuitpython-mprls
 
 
 class PressureSensor:

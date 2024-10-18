@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 # ROS2 Libraries
-import rclpy
-from rclpy.node import Node
-from rclpy.logging import get_logger
-from std_msgs.msg import Float32
-
 # Custom Libraries
 import internal_status_auv.pressure_sensor_lib
+import rclpy
+from rclpy.logging import get_logger
+from rclpy.node import Node
+from std_msgs.msg import Float32
 
 
 class PressurePublisher(Node):
@@ -55,7 +54,7 @@ class PressurePublisher(Node):
             warning_timer_period, self.warning_timer_callback
         )
 
-        # Debuging ----------
+        # Debugging ----------
         self.get_logger().info('"pressure_sensor_publisher" has been started')
 
     def timer_callback(self):
@@ -68,7 +67,7 @@ class PressurePublisher(Node):
         self.publisher_pressure.publish(pressure_msg)
 
     def warning_timer_callback(self):
-        # Check if Pressure is abnormaly to high, if so print a warning
+        # Check if Pressure is abnormally to high, if so print a warning
         if self.pressure > self.pressureCriticalLevel:
             self.logger.fatal(
                 f"WARNING: Internal pressure to HIGH: {self.pressure} hPa! Drone might be LEAKING!"

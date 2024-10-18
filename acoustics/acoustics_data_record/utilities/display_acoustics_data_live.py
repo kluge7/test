@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 
 # Libraries for file manipulation
-import os
 import glob
-
-# Libraries for handling data structures
-import pandas as pd
+import os
 
 # Libraries for anmation
 import matplotlib.animation as animation
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 
-# Variables for seting upp data structures correctly
+# Libraries for handling data structures
+import pandas as pd
+
+# Variables for setting upp data structures correctly
 hydrophoneDataSize = (
     2**10
 ) * 3  # 1 hydrophone buffer is 2^10 long, Each hydrophone data has 3 buffers full of this data
 DSPDataSize = 2**10  # DSP (Digital Signal Processing) has 2^10 long data
 TDOADataSize = 5  # TDOA (Time Difference Of Arrival) has 5 hydrophones it has times for
-positionDataSize = 3  # position only has X, Y, Z basicaly 3 elements
+positionDataSize = 3  # position only has X, Y, Z basically 3 elements
 
 # Important variables for later processing of data
 SAMPLE_RATE = 430_000  # 430 kHz
@@ -138,7 +138,7 @@ def getAcousticsData():
         tdoaData = convertPandasObjectToFloatArray(latestAcousticsData["TDOA"])
         positonData = convertPandasObjectToFloatArray(latestAcousticsData["Position"])
     except Exception:
-        print("ERROR: Coulden't read acoustics data")
+        print("ERROR: Couldn't read acoustics data")
 
     # Post process DSP data to desired scale and amount ----------
     # 1. Convert FFTData to its corresponding frequency amount
@@ -188,7 +188,7 @@ def display_live_data(frame):
     # Get latest acoustics data
     acousticsData = getAcousticsData()
 
-    # Set the lates acoustics data in apropriate variables
+    # Set the lates acoustics data in appropriate variables
     hydrophoneData = [
         acousticsData[0],  # Hydrophone 1
         acousticsData[1],  # Hydrophone 2

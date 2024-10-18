@@ -35,7 +35,7 @@ class LCDScreenDriver:
         self._LCD.write_string(line2)
 
     def fancy_animation(self, animation_speed=0.4):
-        # Calculate the apropriate animation speed
+        # Calculate the appropriate animation speed
         animation_speed = 1 / animation_speed
 
         # Custom characters ----------

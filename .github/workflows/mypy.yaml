@@ -29,11 +29,11 @@ jobs:
         run: |
           # Get the list of changed .py files
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- '*.py')
-          
+
           if [ -z "$CHANGED_FILES" ]; then
             echo "No Python files changed."
             exit 0
-          fi 
+          fi
 
           # Initialize a variable to collect exit codes
           EXIT_CODE=0

@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # ROS2 Libraries
 import rclpy
+from ament_index_python.packages import get_package_share_directory
 from rclpy.node import Node
 from std_msgs.msg import Int16MultiArray
-from ament_index_python.packages import get_package_share_directory
-
-# Custom libraries
-from vortex_msgs.msg import ThrusterForces
 from thruster_interface_auv.thruster_interface_auv_driver_lib import (
     ThrusterInterfaceAUVDriver,
 )
+
+# Custom libraries
+from vortex_msgs.msg import ThrusterForces
 
 
 class ThrusterInterfaceAUVNode(Node):
@@ -92,7 +92,7 @@ class ThrusterInterfaceAUVNode(Node):
 
     def _timer_callback(self):
         # Send thruster forces to be converted into PWM signal and sent to control the thrusters
-        # PWM signal gets saved and is published in the "/pwm" topic as a debuging feature to see if everything is alright with the PWM signal
+        # PWM signal gets saved and is published in the "/pwm" topic as a debugging feature to see if everything is alright with the PWM signal
         thruster_pwm_array = self.thruster_driver.drive_thrusters(
             self.thruster_forces_array
         )

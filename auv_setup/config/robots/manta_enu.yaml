@@ -19,7 +19,7 @@
 
 physical:
   weight: 18.8    #kg
-  buoyancy: 18.8  #kg 
+  buoyancy: 18.8  #kg
   center_of_mass: [0, 0, 0]
   center_of_buoyancy: [0, 0, 0]
   drag_coefficients: [80, 80, 204, 1, 1, 1]
@@ -95,16 +95,16 @@ controllers:
       k1: 45.0
       k2: 28.0
       k3: 10.5
-      
+
 guidance:
   LOS:
     delta: 0.7
-      
+
 computer: 'odroid'
 
-torpedos:       # TODO: decide what pins to use for torpedo
+torpedoes:       # TODO: decide what pins to use for torpedo
   left_pin: 23  # both given in BCM scheme
-  right_pin: 24 
+  right_pin: 24
 
 joystick:
   scaling:
