@@ -1,10 +1,10 @@
 name: Reusable Update Pre-commit
-# Automatically updates the pre-commit config and shows changes if detected
+# Automatically runs pre-commit hooks on all files and fails if there are issues
 
 on: [push]
 
 jobs:
-  auto_update_and_fail_if_changes:
+  auto_run_pre_commit:
     runs-on: ubuntu-22.04
 
     steps:
@@ -19,33 +19,7 @@ jobs:
           source .venv/bin/activate
           pip install pre-commit
 
-      - name: Auto-update pre-commit hooks
+      - name: Run pre-commit hooks on all files
         run: |
           source .venv/bin/activate
-          pre-commit autoupdate
-
-      - name: Check for changes
-        id: check_changes
-        run: |
-          git diff --quiet || echo "changes_detected=true"
-        continue-on-error: true
-
-      - name: Set output for changes detection
-        id: set_changes_output
-        run: |
-          if git diff --quiet; then
-            echo "::set-output name=changes_detected::false"
-          else
-            echo "::set-output name=changes_detected::true"
-          fi
-
-      - name: There are changes
-        if: ${{ steps.set_changes_output.outputs.changes_detected == 'true' }}
-        run: |
-          echo "Changes detected:"
-          git diff
-
-      - name: No changes!
-        if: ${{ steps.set_changes_output.outputs.changes_detected == 'false' }}
-        run: |
-          echo "No changes detected"
+          pre-commit run --all-files
