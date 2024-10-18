@@ -1,25 +1,62 @@
-name: Reusable Update Pre-commit
-# Automatically runs pre-commit hooks on all files and fails if there are issues
+name: Source Build on Push
+# Action to build ROS 2 packages from source on push events
 
-on: [push]
+on:
+  push:
+    branches:
+      - main  # You can specify other branches as needed
 
 jobs:
-  auto_run_pre_commit:
-    runs-on: ubuntu-22.04
+  build:
+    runs-on: ubuntu-22.04  # OS is hardcoded now, but you can change this as needed
+
+    env:
+      WORKSPACE_PATH: ${{ github.workspace }}/vortex_ws
+      ROS_DISTRO: humble  # Default ROS Distro
 
     steps:
-      - name: Checkout code
+      - name: Setup ROS 2 Environment
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: ${{ env.ROS_DISTRO }}
+
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          path: ${{ env.WORKSPACE_PATH }}/src/${{ github.event.repository.name }}
+          ref: ${{ github.ref }}  # Automatically checks out the pushed branch
 
-      - name: Install pre-commit
+      - name: Import Dependencies with vcs
         run: |
-          python3 -m venv .venv
-          source .venv/bin/activate
-          pip install pre-commit
+          cd ${{ env.WORKSPACE_PATH }}/src
+          if [ -f ${{ env.WORKSPACE_PATH }}/src/${{ github.event.repository.name }}/ros2.repos ]; then
+            echo "Found ros2.repos file, importing dependencies..."
+            vcs import . < ${{ env.WORKSPACE_PATH }}/src/${{ github.event.repository.name }}/ros2.repos
+          else
+            echo "No ros2.repos file found, skipping dependency import."
+          fi
 
-      - name: Run pre-commit hooks on all files
+      - name: Install Package Dependencies with rosdep
         run: |
-          source .venv/bin/activate
-          pre-commit run --all-files
+          cd ${{ env.WORKSPACE_PATH }}
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
+          rosdep update
+          rosdep install --from-paths src --ignore-src -r -y
+
+      - name: Build ROS 2 Workspace
+        run: |
+          cd ${{ env.WORKSPACE_PATH }}
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
+          colcon build --event-handlers console_cohesion+
+
+      - name: Run Tests
+        run: |
+          cd ${{ env.WORKSPACE_PATH }}
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
+          colcon test --event-handlers console_direct+
+
+      - name: Test Results Summary
+        run: |
+          cd ${{ env.WORKSPACE_PATH }}
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
+          colcon test-result --verbose
