@@ -24,10 +24,18 @@ jobs:
           source .venv/bin/activate
           pre-commit autoupdate
 
-      - name: Show changes (if any)
+      - name: Check for changes
+        id: git_status
         run: |
-          git diff || true
+          git diff --quiet || echo "changes_detected=true" >> $GITHUB_ENV
+        continue-on-error: true
 
-      - name: Check for changes and fail if detected
+      - name: There are changes
+        if: env.changes_detected == 'true'
         run: |
-          git diff --quiet || exit 1
+          git diff --exit-code || true
+
+      - name: No changes!
+        if: env.changes_detected != 'true'
+        run: |
+          echo "No changes detected"
