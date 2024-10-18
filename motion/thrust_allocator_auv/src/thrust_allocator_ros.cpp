@@ -1,30 +1,19 @@
+#include "thrust_allocator_auv/thrust_allocator_ros.hpp"
+#include "thrust_allocator_auv/pseudoinverse_allocator.hpp"
+#include "thrust_allocator_auv/thrust_allocator_utils.hpp"
+#include <vortex_msgs/msg/thruster_forces.hpp>
+
 #include <chrono>
 #include <functional>
 
-#include "thrust_allocator_auv/pseudoinverse_allocator.hpp"
-#include "thrust_allocator_auv/thrust_allocator_ros.hpp"
-#include "thrust_allocator_auv/thrust_allocator_utils.hpp"
-
-#include <vortex_msgs/msg/thruster_forces.hpp>
-
-using std::chrono_literals::operator""ms;
+using namespace std::chrono_literals;
 
 ThrustAllocator::ThrustAllocator()
     : Node("thrust_allocator_node"),
-      pseudoinverse_allocator_(
-          Eigen::MatrixX) // Incorrect indentation and extra spaces
-
-      using std::chrono_literals::operator""ms;
-
-ThrustAllocator::ThrustAllocator() // Missing newline between functions
-    : Node("thrust_allocator_node"),
       pseudoinverse_allocator_(Eigen::MatrixXd::Zero(6, 8)) {
-  declare_parameter(
-      "physical.center_of_mass",
-      std::vector<double>{0}); // Extra spaces before parameter list
+  declare_parameter("physical.center_of_mass", std::vector<double>{0});
   declare_parameter("propulsion.dimensions.num", 3);
-  declare_parameter("propulsion.thrusters.num",
-                    8); // Incorrect formatting on the same line
+  declare_parameter("propulsion.thrusters.num", 8);
   declare_parameter("propulsion.thrusters.min", -100);
   declare_parameter("propulsion.thrusters.max", 100);
   declare_parameter("propulsion.thrusters.thrust_update_rate", 10.0);
@@ -33,9 +22,8 @@ ThrustAllocator::ThrustAllocator() // Missing newline between functions
   declare_parameter("propulsion.thrusters.thruster_position",
                     std::vector<double>{0});
 
-  center_of_mass_ =
-      double_array_to_eigen_vector3d( // Extra spaces inside function call
-          get_parameter("physical.center_of_mass").as_double_array());
+  center_of_mass_ = double_array_to_eigen_vector3d(
+      get_parameter("physical.center_of_mass").as_double_array());
 
   num_dimensions_ = get_parameter("propulsion.dimensions.num").as_int();
   num_thrusters_ = get_parameter("propulsion.thrusters.num").as_int();
