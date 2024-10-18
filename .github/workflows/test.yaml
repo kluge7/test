@@ -1,24 +1,36 @@
-name: Pre-commit Checks
-# Runs pre-commit checks on push
+name: Reusable Update Pre-commit
 
-on: push
+on: [push]
 
 jobs:
   pre-commit:
-    runs-on: ubuntu-22.04  # OS is hardcoded now
-
-    env:
-      WORKSPACE_PATH: ${{ github.workspace }}/vortex_ws
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      # Checkout the repository
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          path: ${{ env.WORKSPACE_PATH }}/src/${{ github.event.repository.name }}
-          ref: ${{ github.ref }}  # Automatically uses the branch that triggered the push
+          fetch-depth: 0  # Ensures all history is fetched for pre-commit hooks
 
-      - name: Setup Python
-        uses: actions/setup-python@v3
+      # Set up Python (if your pre-commit hooks require a specific Python version)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'  # Specify the Python version you need
 
-      - name: Run pre-commit checks
+      # Cache pre-commit environments to speed up subsequent runs
+      - name: Cache pre-commit
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pre-commit-
+
+      # Install and run pre-commit hooks
+      - name: Run pre-commit hooks
         uses: pre-commit/action@v3.0.1
+        with:
+          # Pass additional arguments if needed
+          extra_args: --all-files
