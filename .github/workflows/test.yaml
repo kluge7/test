@@ -1,6 +1,6 @@
 name: Reusable Update Pre-commit
 
-on: [push]
+on: []
 
 jobs:
   pre-commit:

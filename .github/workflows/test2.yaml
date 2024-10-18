@@ -14,7 +14,7 @@ jobs:
       ROS_DISTRO: humble  # Default ROS distro, can be overridden via env
       OS_NAME: ubuntu-22.04  # Default OS name, can be overridden via env
       REF: ${{ github.ref }}  # Git branch to checkout (from push event)
-      VCS_REPO_FILE_URL: 'https://github.com/kluge7/test/blob/master/ros2.repos'  # Default empty for no repos file
+      VCS_REPO_FILE_URL: 'https://github.com/vortexntnu/vortex-auv/blob/main/ros2.repos'  # Default empty for no repos file
       SKIP_TESTS: 'false'  # Default to false, set to true to skip tests
 
     steps:
