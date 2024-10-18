@@ -1,0 +1,104 @@
+name: Source Build with Ccache
+# Action to build ROS 2 packages from source with ccache support
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    env:
+      WORKSPACE_PATH: ${{ github.workspace }}/vortex_ws
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CCACHE_MAXSIZE: 5G  # Adjust based on your needs
+      CCACHE_COMPRESS: 1
+      CCACHE_SLOPPINESS: "file_macro,include_file_mtime,include_file_ctime"
+      ROS_DISTRO: humble  # Default ROS distribution
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          path: ${{ env.WORKSPACE_PATH }}/src/${{ github.event.repository.name }}
+          ref: ${{ github.ref }}
+          fetch-depth: 0  # Ensure full history for ccache and dependencies
+
+      - name: Setup ROS 2 Environment
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: ${{ env.ROS_DISTRO }}
+
+      - name: Cache ccache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ runner.os }}-ccache-${{ hashFiles('**/.ccache/**') }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-
+
+      - name: Install ccache
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ccache
+          # Configure ccache
+          echo "export PATH=/usr/lib/ccache:$PATH" >> $GITHUB_ENV
+          echo "export CC='ccache gcc'" >> $GITHUB_ENV
+          echo "export CXX='ccache g++'" >> $GITHUB_ENV
+          echo "export CCACHE_DIR=${CCACHE_DIR}" >> $GITHUB_ENV
+          echo "export CCACHE_MAXSIZE=${CCACHE_MAXSIZE}" >> $GITHUB_ENV
+          echo "export CCACHE_COMPRESS=${CCACHE_COMPRESS}" >> $GITHUB_ENV
+          echo "export CCACHE_SLOPPINESS=${CCACHE_SLOPPINESS}" >> $GITHUB_ENV
+          # Initialize ccache directory
+          mkdir -p $CCACHE_DIR
+
+      - name: Import Dependencies with vcs
+        run: |
+          cd ${{ env.WORKSPACE_PATH }}/src
+          if [ -f ${{ env.WORKSPACE_PATH }}/src/${{ github.event.repository.name }}/ros2.repos ]; then
+            echo "Found ros2.repos file, importing dependencies..."
+            vcs import . < ${{ env.WORKSPACE_PATH }}/src/${{ github.event.repository.name }}/ros2.repos
+          else
+            echo "No ros2.repos file found, skipping dependency import."
+          fi        
+
+      - name: Install Package Dependencies with rosdep
+        run: |
+          sudo rosdep init || true
+          rosdep update
+          cd ${{ env.WORKSPACE_PATH }}
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
+          rosdep install --from-paths src --ignore-src -r -y
+
+      - name: Cache ROS Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.ros
+            ~/.cache/colcon
+          key: ${{ runner.os }}-ros-deps-${{ hashFiles('**/package.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-ros-deps-
+
+      - name: Build ROS 2 Workspace
+        run: |
+          cd ${{ env.WORKSPACE_PATH }}
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
+          colcon build --event-handlers console_cohesion+ --parallel-workers 4
+
+      - name: Run Tests
+        run: |
+          cd ${{ env.WORKSPACE_PATH }}
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
+          colcon test --event-handlers console_direct+
+
+      - name: Test Results Summary
+        run: |
+          cd ${{ env.WORKSPACE_PATH }}
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
+          colcon test-result --verbose
+
+      - name: Save ccache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ runner.os }}-ccache-${{ hashFiles('**/.ccache/**') }}
