@@ -1,10 +1,7 @@
 name: Pre-commit Checks
 # Runs pre-commit checks on push
 
-on:
-  push:
-    branches:
-      - main  # Or any other branches you want to include
+on: push
 
 jobs:
   pre-commit:
