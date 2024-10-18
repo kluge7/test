@@ -78,5 +78,3 @@
         0, 0,
         0, 0]
       data_logging_rate: 1.0 # [logings/second], Recommended: 1.0 logings per second
-
-
