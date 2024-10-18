@@ -14,6 +14,3 @@ jobs:
     with:
       ros_distro: 'humble'       # Specify the ROS 2 distribution (or leave it to use default 'humble')
       os_name: 'ubuntu-22.04'    # Specify the OS (or leave it to use default 'ubuntu-22.04')
-      ref: 'feature-branch'      # Specify the branch to checkout (or leave it to use default 'main')
-    secrets:
-      token: ${{ secrets.MY_SECRET }}   # Use the stored secret for the Personal Access Token
