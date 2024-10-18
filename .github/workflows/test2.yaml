@@ -14,42 +14,44 @@ jobs:
       ROS_DISTRO: humble  # Default ROS distro, can be overridden via env
       OS_NAME: ubuntu-22.04  # Default OS name, can be overridden via env
       REF: ${{ github.ref_name }}  # Git branch to checkout (from push event)
-      CCACHE_DIR: .ccache  # Local path to store cache
       WORKSPACE_PATH: ${{ github.workspace }}/vortex_ws
       GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
+      # Configure ccache environment variables
+      CC: ccache gcc
+      CXX: ccache g++
+      # Optionally, set ccache max size (e.g., 5G)
+      CCACHE_MAXSIZE: 5G
 
     steps:
-      - name: Setup ROS 2 Environment
-        uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: ${{ env.ROS_DISTRO }}
-
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           path: ${{ env.WORKSPACE_PATH }}/src/${{ env.GITHUB_REPOSITORY_NAME }}
           ref: ${{ env.REF }}
 
+      - name: Cache ccache
+        uses: actions/cache@v3
+        with:
+          path: ~/.ccache
+          key: ${{ runner.os }}-ccache-${{ hashFiles('**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-
+
       - name: Install ccache
         run: |
           sudo apt-get update
           sudo apt-get install -y ccache
+          # Configure ccache
+          echo 'export PATH="/usr/lib/ccache:$PATH"' >> $GITHUB_ENV
+          echo 'export CC="ccache gcc"' >> $GITHUB_ENV
+          echo 'export CXX="ccache g++"' >> $GITHUB_ENV
+          echo 'export CCACHE_MAXSIZE=5G' >> $GITHUB_ENV
+          echo 'export CCACHE_DIR=~/.ccache' >> $GITHUB_ENV
 
-      - name: Cache ccache
-        uses: actions/cache@v3
+      - name: Setup ROS 2 Environment
+        uses: ros-tooling/setup-ros@v0.7
         with:
-          path: ${{ env.WORKSPACE_PATH }}/${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ env.REF }}-${{ hashFiles('**/CMakeLists.txt', '**/*.cpp', '**/*.h', '**/*.py') }}
-          restore-keys: |
-            ${{ runner.os }}-ccache-
-
-      - name: Configure ccache
-        run: |
-          echo "Configuring ccache..."
-          export PATH="/usr/lib/ccache:$PATH"
-          export CCACHE_DIR=${{ env.CCACHE_DIR }}
-          ccache -M 2G  # Set the maximum cache size to 2 GB
-          ccache -z     # Zero the ccache statistics
+          required-ros-distributions: ${{ env.ROS_DISTRO }}
 
       - name: Import Dependencies with vcs
         run: |
@@ -72,7 +74,9 @@ jobs:
         run: |
           cd ${{ env.WORKSPACE_PATH }}
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
-          colcon build --event-handlers console_cohesion+ --cmake-args -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          colcon build --event-handlers console_cohesion+ \
+                       --cmake-args -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+                                     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
       - name: Run Tests
         run: |
@@ -85,7 +89,3 @@ jobs:
           cd ${{ env.WORKSPACE_PATH }}
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
           colcon test-result --verbose
-
-      - name: Show ccache stats
-        run: |
-          ccache -s
