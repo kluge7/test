@@ -12,7 +12,7 @@ repos:
       # Ensure consistent line endings
       - id: mixed-line-ending
         args: ["--fix=lf"]
-
+ 
   # Import Sorting
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
