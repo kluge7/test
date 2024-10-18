@@ -25,17 +25,27 @@ jobs:
           pre-commit autoupdate
 
       - name: Check for changes
-        id: git_status
+        id: check_changes
         run: |
-          git diff --quiet || echo "changes_detected=true" >> $GITHUB_ENV
+          git diff --quiet || echo "changes_detected=true"
         continue-on-error: true
 
-      - name: There are changes
-        if: env.changes_detected == 'true'
+      - name: Set output for changes detection
+        id: set_changes_output
         run: |
-          git diff --exit-code || true
+          if git diff --quiet; then
+            echo "::set-output name=changes_detected::false"
+          else
+            echo "::set-output name=changes_detected::true"
+          fi
+
+      - name: There are changes
+        if: ${{ steps.set_changes_output.outputs.changes_detected == 'true' }}
+        run: |
+          echo "Changes detected:"
+          git diff
 
       - name: No changes!
-        if: env.changes_detected != 'true'
+        if: ${{ steps.set_changes_output.outputs.changes_detected == 'false' }}
         run: |
           echo "No changes detected"
