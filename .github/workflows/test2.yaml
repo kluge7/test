@@ -43,6 +43,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-ccache-
 
+      - name: Configure ccache
+        run: |
+          echo "Configuring ccache..."
+          export PATH="/usr/lib/ccache:$PATH"
+          export CCACHE_DIR=${{ env.CCACHE_DIR }}
+          ccache -M 2G  # Set the maximum cache size to 2 GB
+          ccache -z     # Zero the ccache statistics
+
       - name: Import Dependencies with vcs
         run: |
           cd ${{ env.WORKSPACE_PATH }}/src
