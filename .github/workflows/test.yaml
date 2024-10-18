@@ -1,16 +1,29 @@
-name: Source Build with Reusable Workflow
+name: Reusable Update Pre-commit
+# Automatically updates the pre-commit config and fails if changes are detected
 
-on:
-  pull_request:
-    branches:
-      - master
-  push:
-    branches:
-      - master
+on: [push]
 
 jobs:
-  build:
-    uses: kluge7/test3/.github/workflows/reusable-source-build.yaml@main  # Replace 'your-username' with your GitHub username
-    with:
-      ros_distro: 'humble'       # Specify the ROS 2 distribution (or leave it to use default 'humble')
-      os_name: 'ubuntu-22.04'    # Specify the OS (or leave it to use default 'ubuntu-22.04')
+  auto_update_and_fail_if_changes:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pre-commit
+        run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install pre-commit
+
+      - name: Auto-update pre-commit hooks
+        run: |
+          source .venv/bin/activate
+          pre-commit autoupdate
+
+      - name: Check for changes and fail if detected
+        run: |
+          git diff --quiet || exit 1
