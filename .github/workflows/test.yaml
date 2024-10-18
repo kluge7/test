@@ -1,59 +1,27 @@
-name: Source Build on Push
-# Action to build ROS 2 packages from source on push events
+name: Pre-commit Checks
+# Runs pre-commit checks on push
 
-on: [push]
+on:
+  push:
+    branches:
+      - main  # Or any other branches you want to include
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04  # OS is hardcoded now, but you can change this as needed
+  pre-commit:
+    runs-on: ubuntu-22.04  # OS is hardcoded now
 
     env:
       WORKSPACE_PATH: ${{ github.workspace }}/vortex_ws
-      ROS_DISTRO: humble  # Default ROS Distro
 
     steps:
-      - name: Setup ROS 2 Environment
-        uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: ${{ env.ROS_DISTRO }}
-
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           path: ${{ env.WORKSPACE_PATH }}/src/${{ github.event.repository.name }}
-          ref: ${{ github.ref }}  # Automatically checks out the pushed branch
+          ref: ${{ github.ref }}  # Automatically uses the branch that triggered the push
 
-      - name: Import Dependencies with vcs
-        run: |
-          cd ${{ env.WORKSPACE_PATH }}/src
-          if [ -f ${{ env.WORKSPACE_PATH }}/src/${{ github.event.repository.name }}/ros2.repos ]; then
-            echo "Found ros2.repos file, importing dependencies..."
-            vcs import . < ${{ env.WORKSPACE_PATH }}/src/${{ github.event.repository.name }}/ros2.repos
-          else
-            echo "No ros2.repos file found, skipping dependency import."
-          fi
+      - name: Setup Python
+        uses: actions/setup-python@v3
 
-      - name: Install Package Dependencies with rosdep
-        run: |
-          cd ${{ env.WORKSPACE_PATH }}
-          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
-          rosdep update
-          rosdep install --from-paths src --ignore-src -r -y
-
-      - name: Build ROS 2 Workspace
-        run: |
-          cd ${{ env.WORKSPACE_PATH }}
-          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
-          colcon build --event-handlers console_cohesion+
-
-      - name: Run Tests
-        run: |
-          cd ${{ env.WORKSPACE_PATH }}
-          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
-          colcon test --event-handlers console_direct+
-
-      - name: Test Results Summary
-        run: |
-          cd ${{ env.WORKSPACE_PATH }}
-          source /opt/ros/${{ env.ROS_DISTRO }}/setup.bash
-          colcon test-result --verbose
+      - name: Run pre-commit checks
+        uses: pre-commit/action@v3.0.1
