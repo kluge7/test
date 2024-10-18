@@ -1,7 +1,7 @@
 repos:
   # Formatters and Code Fixers
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       # Fix end-of-file newlines
       - id: end-of-file-fixer
