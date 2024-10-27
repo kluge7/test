@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # ROS2 Libraries
 # Custom Libraries
-import internal_status_auv.power_sense_module_lib
 import rclpy
 from rclpy.logging import get_logger
 from rclpy.node import Node
 from std_msgs.msg import Float32
+
+import internal_status_auv.power_sense_module_lib
 
 
 class PowerSenseModulePublisher(Node):
@@ -15,8 +16,12 @@ class PowerSenseModulePublisher(Node):
         self.psm = internal_status_auv.power_sense_module_lib.PowerSenseModule()
 
         # Create publishers ----------
-        self.publisher_current = self.create_publisher(Float32, "/auv/power_sense_module/current", 5)
-        self.publisher_voltage = self.create_publisher(Float32, "/auv/power_sense_module/voltage", 5)
+        self.publisher_current = self.create_publisher(
+            Float32, "/auv/power_sense_module/current", 5
+        )
+        self.publisher_voltage = self.create_publisher(
+            Float32, "/auv/power_sense_module/voltage", 5
+        )
 
         # Data gathering cycle ----------
         self.current = 0.0
@@ -25,7 +30,11 @@ class PowerSenseModulePublisher(Node):
         self.declare_parameter(
             "internal_status.power_sense_module_read_rate", 10.0
         )  # Providing a default value 10.0 => 0.1 second delay per data gathering
-        read_rate = self.get_parameter("internal_status.power_sense_module_read_rate").get_parameter_value().double_value
+        read_rate = (
+            self.get_parameter("internal_status.power_sense_module_read_rate")
+            .get_parameter_value()
+            .double_value
+        )
         read_timer_period = 1.0 / read_rate
         self.read_timer = self.create_timer(read_timer_period, self.read_timer_callback)
 
@@ -33,15 +42,29 @@ class PowerSenseModulePublisher(Node):
         self.logger = get_logger("power_sense_module")
 
         self.declare_parameter("internal_status.voltage_min", 14.5)
-        self.voltage_min = self.get_parameter("internal_status.voltage_min").get_parameter_value().double_value
+        self.voltage_min = (
+            self.get_parameter("internal_status.voltage_min")
+            .get_parameter_value()
+            .double_value
+        )
 
         self.declare_parameter("internal_status.voltage_max", 16.8)
-        self.voltage_max = self.get_parameter("internal_status.voltage_max").get_parameter_value().double_value
+        self.voltage_max = (
+            self.get_parameter("internal_status.voltage_max")
+            .get_parameter_value()
+            .double_value
+        )
 
         self.declare_parameter("internal_status.power_sense_module_warning_rate", 0.1)
-        warning_rate = self.get_parameter("internal_status.power_sense_module_warning_rate").get_parameter_value().double_value
+        warning_rate = (
+            self.get_parameter("internal_status.power_sense_module_warning_rate")
+            .get_parameter_value()
+            .double_value
+        )
         warning_timer_period = 1.0 / warning_rate
-        self.warning_timer = self.create_timer(warning_timer_period, self.warning_timer_callback)
+        self.warning_timer = self.create_timer(
+            warning_timer_period, self.warning_timer_callback
+        )
 
         # Debugging ----------
         self.get_logger().info('"power_sense_module_publisher" has been started')
@@ -64,8 +87,12 @@ class PowerSenseModulePublisher(Node):
         current_msg.data = self.current
         voltage_msg.data = self.voltage
 
-        self.publisher_current.publish(current_msg)  # publish current value to the "current topic"
-        self.publisher_voltage.publish(voltage_msg)  # publish voltage value to the "voltge topic"
+        self.publisher_current.publish(
+            current_msg
+        )  # publish current value to the "current topic"
+        self.publisher_voltage.publish(
+            voltage_msg
+        )  # publish voltage value to the "voltge topic"
 
     def warning_timer_callback(self) -> None:
         """
@@ -89,9 +116,10 @@ def main(args: list = None) -> None:
     and publishing current and voltage data.
 
     Args:
-    -----
+    ----
     args : list, optional
         Arguments passed to the node. Default is None.
+
     """
     rclpy.init(args=args)
 

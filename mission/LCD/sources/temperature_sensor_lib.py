@@ -3,7 +3,7 @@
 ! NOTE:
 ! For now we don't have a external sensor to measure internal temperature
 ! Instead we just use Internal Computer temperature sensor to gaugue temperature of the environment approximately
-! In the future someone should implement a external temperature sensor for measuting a more accurate state of the temperatuer on the inside of the AUV
+! In the future someone should implement a external temperature sensor for measuting a more accurate state of the temperatuer on the inside of the AUV.
 """
 
 # Python Libraries
@@ -24,6 +24,7 @@ class TemperatureSensor:
 
         Raises:
             Exception: If there is an error reading the temperature sensor file.
+
         """
         try:
             # Read internal temperature on the computer

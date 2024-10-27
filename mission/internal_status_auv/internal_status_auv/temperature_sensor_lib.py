@@ -3,7 +3,7 @@
 ! NOTE:
 ! For now we don't have a external sensor to measure internal temperature
 ! Instead we just use Internal Computer temperature sensor to gaugue temperature of the environment approximately
-! In the future someone should implement a external temperature sensor for measuting a more accurate state of the temperatuer on the inside of the AUV
+! In the future someone should implement a external temperature sensor for measuting a more accurate state of the temperatuer on the inside of the AUV.
 """
 
 # Python Libraries
@@ -22,10 +22,11 @@ class TemperatureSensor:
         This method reads the temperature value from the internal sensor file, which is in milli°C,
         converts it into Celsius, and returns the result.
 
-        Returns:
-        --------
+        Returns
+        -------
         float
             The current temperature in Celsius. If an error occurs, it returns 0.0.
+
         """
         try:
             # Read internal temperature on the computer

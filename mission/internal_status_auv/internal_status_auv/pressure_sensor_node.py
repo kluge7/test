@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # ROS2 Libraries
 # Custom Libraries
-import internal_status_auv.pressure_sensor_lib
 import rclpy
 from rclpy.logging import get_logger
 from rclpy.node import Node
 from std_msgs.msg import Float32
+
+import internal_status_auv.pressure_sensor_lib
 
 
 class PressurePublisher(Node):
@@ -22,8 +23,14 @@ class PressurePublisher(Node):
         # Data gathering cycle ----------
         self.pressure = 0.0
 
-        self.declare_parameter("internal_status.pressure_read_rate", 1.0)  # Providing a default value 1.0 => 1 second delay per data gathering
-        read_rate = self.get_parameter("internal_status.pressure_read_rate").get_parameter_value().double_value
+        self.declare_parameter(
+            "internal_status.pressure_read_rate", 1.0
+        )  # Providing a default value 1.0 => 1 second delay per data gathering
+        read_rate = (
+            self.get_parameter("internal_status.pressure_read_rate")
+            .get_parameter_value()
+            .double_value
+        )
         timer_period = 1.0 / read_rate
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
@@ -31,12 +38,22 @@ class PressurePublisher(Node):
         self.logger = get_logger("pressure_sensor")
 
         self.declare_parameter("internal_status.pressure_critical_level", 1000.0)
-        self.pressure_critical_level = self.get_parameter("internal_status.pressure_critical_level").get_parameter_value().double_value
+        self.pressure_critical_level = (
+            self.get_parameter("internal_status.pressure_critical_level")
+            .get_parameter_value()
+            .double_value
+        )
 
         self.declare_parameter("internal_status.pressure_warning_rate", 0.1)
-        warning_rate = self.get_parameter("internal_status.pressure_warning_rate").get_parameter_value().double_value
+        warning_rate = (
+            self.get_parameter("internal_status.pressure_warning_rate")
+            .get_parameter_value()
+            .double_value
+        )
         warning_timer_period = 1.0 / warning_rate
-        self.warning_timer = self.create_timer(warning_timer_period, self.warning_timer_callback)
+        self.warning_timer = self.create_timer(
+            warning_timer_period, self.warning_timer_callback
+        )
 
         # Debugging ----------
         self.get_logger().info('"pressure_sensor_publisher" has been started')
@@ -64,7 +81,9 @@ class PressurePublisher(Node):
         If so, a fatal warning is logged indicating a possible leak in the AUV.
         """
         if self.pressure > self.pressure_critical_level:
-            self.logger.fatal(f"WARNING: Internal pressure to HIGH: {self.pressure} hPa! Drone might be LEAKING!")
+            self.logger.fatal(
+                f"WARNING: Internal pressure to HIGH: {self.pressure} hPa! Drone might be LEAKING!"
+            )
 
 
 def main(args: list = None) -> None:
@@ -76,9 +95,10 @@ def main(args: list = None) -> None:
     running and publishing pressure data.
 
     Args:
-    -----
+    ----
     args : list, optional
         Arguments passed to the node. Default is None.
+
     """
     rclpy.init(args=args)
 

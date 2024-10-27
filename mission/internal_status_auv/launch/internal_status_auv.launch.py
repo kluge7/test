@@ -17,10 +17,11 @@ def generate_launch_description() -> LaunchDescription:
     The nodes will be launched with their respective executables and display
     output on the screen.
 
-    Returns:
-    --------
+    Returns
+    -------
     launch.LaunchDescription
         A LaunchDescription object containing the nodes to be launched.
+
     """
     # Path to the YAML file
     yaml_file_path = os.path.join(

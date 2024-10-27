@@ -30,10 +30,13 @@ def format_line(value: str, unit: str) -> str:
 
     Returns:
         str: A formatted string that fits within a 16-character limit, with the unit appended.
+
     """
     spaces_available = 16
     value_length = len(value)
-    unit_length = len(unit) + 1  # +1 to make sure there is spacing between value and unit
+    unit_length = (
+        len(unit) + 1
+    )  # +1 to make sure there is spacing between value and unit
 
     empty_space_length = spaces_available - (value_length + unit_length)
     empty_space_length = max(empty_space_length, 0)
@@ -53,7 +56,7 @@ while True:
     # IP ----------
     TIME_DISPLAYING = 5
     UPDATES_PER_SECOND = 1
-    for i in range(TIME_DISPLAYING * UPDATES_PER_SECOND):
+    for _i in range(TIME_DISPLAYING * UPDATES_PER_SECOND):
         LINE_1 = "IP: "
         LINE_2 = str(IP.get_ip())
         LCD.write_to_screen(LINE_1, LINE_2)
@@ -62,7 +65,7 @@ while True:
     # Voltage and Current ----------
     TIME_DISPLAYING = 5
     UPDATES_PER_SECOND = 2
-    for i in range(TIME_DISPLAYING * UPDATES_PER_SECOND):
+    for _i in range(TIME_DISPLAYING * UPDATES_PER_SECOND):
         LINE_1 = format_line(str(round(PSM.get_voltage(), 3)), "V")
         LINE_2 = format_line(str(round(PSM.get_current(), 3)), "A")
         LCD.write_to_screen(LINE_1, LINE_2)
@@ -71,7 +74,7 @@ while True:
     # Pressure and Temperature ----------
     TIME_DISPLAYING = 5
     UPDATES_PER_SECOND = 1
-    for i in range(TIME_DISPLAYING * UPDATES_PER_SECOND):
+    for _i in range(TIME_DISPLAYING * UPDATES_PER_SECOND):
         LINE_1 = format_line(str(round(Pressure.get_pressure(), 1)), "hPa")
         LINE_2 = format_line(str(round(Temperature.get_temperature(), 1)), "*C")
         LCD.write_to_screen(LINE_1, LINE_2)
