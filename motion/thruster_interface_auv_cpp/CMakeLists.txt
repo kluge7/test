@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(thruster_interface_auv_cpp)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Required dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
