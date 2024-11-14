@@ -68,23 +68,42 @@ jobs:
       - name: List root directory contents
         run: ls -al
 
-      # Debugging Step: List contents of specific directories, e.g., src, if they exist
-      - name: List src directory contents
-        if: inputs.download_requirements && -d src
-        run: ls -al src
+      # Debugging Step: List contents of specific directories if they exist
+      - name: List src directory contents if it exists
+        run: |
+          if [ -d src ]; then
+            echo "Listing contents of src directory:"
+            ls -al src
+          else
+            echo "src directory does not exist."
+          fi
 
-      # Debugging Step: List contents of the ROS 2 workspace directories, if applicable
-      - name: List build directory contents
-        if: inputs.download_requirements && -d build
-        run: ls -al build
+      - name: List build directory contents if it exists
+        run: |
+          if [ -d build ]; then
+            echo "Listing contents of build directory:"
+            ls -al build
+          else
+            echo "build directory does not exist."
+          fi
 
-      - name: List install directory contents
-        if: inputs.download_requirements && -d install
-        run: ls -al install
+      - name: List install directory contents if it exists
+        run: |
+          if [ -d install ]; then
+            echo "Listing contents of install directory:"
+            ls -al install
+          else
+            echo "install directory does not exist."
+          fi
 
-      - name: List logs directory contents
-        if: inputs.download_requirements && -d logs
-        run: ls -al logs
+      - name: List logs directory contents if it exists
+        run: |
+          if [ -d logs ]; then
+            echo "Listing contents of logs directory:"
+            ls -al logs
+          else
+            echo "logs directory does not exist."
+          fi
 
       # Conditionally download and execute requirements.sh if download_requirements is true and file exists
       - name: Download and install extra dependencies if requirements.sh exists
