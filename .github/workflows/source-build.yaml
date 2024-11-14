@@ -8,7 +8,7 @@ on:
     - cron: "0 1 * * *"
 jobs:
   source-build:
-    uses: vortexntnu/vortex-ci/.github/workflows/reusable-source-build.yaml@feat/add-support-for-external-dependency-installation-script-in-reusable-source-build-pipeline
+    uses: kluge7/test/.github/workflows/reusables-rouce-bilds.yaml@apple
     with:
       ros_distro: 'humble'
       os_name: 'ubuntu-22.04'
