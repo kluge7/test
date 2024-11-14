@@ -124,3 +124,38 @@ jobs:
           target-ros2-distro: ${{ inputs.ros_distro }}
           vcs-repo-file-url: ${{ inputs.vcs_repo_file_url }}
           skip-tests: ${{ inputs.skip_tests }}
+      - name: List src directory contents if it exists
+        run: |
+            if [ -d src ]; then
+                echo "Listing contents of src directory:"
+                ls -al src
+            else
+                echo "src directory does not exist."
+            fi
+
+      - name: List build directory contents if it exists
+        run: |
+            if [ -d build ]; then
+                echo "Listing contents of build directory:"
+                ls -al build
+            else
+                echo "build directory does not exist."
+            fi
+
+      - name: List install directory contents if it exists
+        run: |
+            if [ -d install ]; then
+                echo "Listing contents of install directory:"
+                ls -al install
+            else
+                echo "install directory does not exist."
+            fi
+
+      - name: List logs directory contents if it exists
+        run: |
+            if [ -d logs ]; then
+                echo "Listing contents of logs directory:"
+                ls -al logs
+            else
+                echo "logs directory does not exist."
+            fi
