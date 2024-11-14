@@ -124,6 +124,8 @@ jobs:
           target-ros2-distro: ${{ inputs.ros_distro }}
           vcs-repo-file-url: ${{ inputs.vcs_repo_file_url }}
           skip-tests: ${{ inputs.skip_tests }}
+      - name: List root directory contents
+        run: ls -al
       - name: List src directory contents if it exists
         run: |
             if [ -d src ]; then
