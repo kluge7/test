@@ -1,7 +1,6 @@
 name: Clang Tidy
 # Build the ROS 2 workspace from clang tidy
-on:
-  pull_request:
+on: []
 jobs:
   source-build:
     uses: vortexntnu/vortex-ci/.github/workflows/reusable-clang-tidy.yaml@feat/clang-tidy-ros2

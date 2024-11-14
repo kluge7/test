@@ -8,9 +8,10 @@ on:
     - cron: "0 1 * * *"
 jobs:
   source-build:
-    uses: kluge7/test/.github/workflows/reusables-rouce-bilds.yaml@apple
+    uses: vortexntnu/vortex-ci/.github/workflows/reusable-source-build.yaml@feat/add-support-for-external-dependency-installation-script-in-reusable-source-build-pipeline
     with:
       ros_distro: 'humble'
       os_name: 'ubuntu-22.04'
       ref: ${{ github.ref }}
-      vcs_repo_file_url: 'https://raw.githubusercontent.com/vortexntnu/vortex-auv/main/ros2.repos'      
+      vcs_repo_file_url: 'https://raw.githubusercontent.com/vortexntnu/vortex-auv/main/ros2.repos'
+      
