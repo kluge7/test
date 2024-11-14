@@ -1,18 +1,20 @@
 #!/bin/bash
-# install_extra_deps.sh
-# This script installs additional dependencies not managed by rosdep.
+# requirements.sh
+# This script installs additional dependencies that are not managed by rosdep.
+# It can install both Python libraries (using pip) and C++ libraries (using apt-get).
 
-# Exit immediately if any command fails
+# Exit immediately if any command fails to prevent the script from continuing after an error.
 set -e
 
 echo "Starting manual installation of extra dependencies..."
 
-# Install Python libraries not handled by rosdep
+# ---- PYTHON DEPENDENCIES ----
+# Upgrade pip to ensure compatibility with the latest packages
 pip3 install --upgrade pip
-pip3 install control
 
-# Install system packages not handled by rosdep
-# Uncomment the line below if you need to install a system package, e.g., python3-pyqt6
-# sudo apt-get update && sudo apt-get install -y python3-pyqt6
+# Install Python packages with specified versions that are not handled by rosdep.
+# Specify versions using `==<version-number>` for consistent builds.
+# Example: `pip3 install <package-name>==<version>`
+pip3 install control==0.10.1
 
 echo "Finished installing extra dependencies."
