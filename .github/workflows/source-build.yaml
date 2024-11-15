@@ -14,5 +14,5 @@ jobs:
       os_name: 'ubuntu-22.04'
       ref: ${{ github.ref }}
       vcs_repo_file_url: 'https://raw.githubusercontent.com/vortexntnu/vortex-auv/main/ros2.repos'
-      setup_script: "requirements.sh"
+      setup_script: ""
       
