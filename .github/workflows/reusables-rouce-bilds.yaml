@@ -41,6 +41,8 @@ on:
 jobs:
   build:
     runs-on: ${{ inputs.os_name }}
+    container:
+      image: ros:${{ inputs.ros_distro }}-ros-base  
     steps:
       - name: set gcc and g++ version
         if: inputs.gcc_version != '11'
