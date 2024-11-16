@@ -33,7 +33,7 @@ on:
         required: false
         default: "11" # Default GCC version commonly available on Ubuntu 22.04
         type: string
-      dependency-script:
+      dependency_script:
         description: "Path to a local script for managing dependencies not supported by rosdep or for pinning package versions"
         required: false
         default: ""
@@ -59,15 +59,15 @@ jobs:
         with:
           required-ros-distributions: ${{ inputs.ros_distro }}
       - name: Checkout repository
-        if: inputs.dependency-script != ''
+        if: inputs.dependency_script != ''
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
           path: ${{ env.TEMPORARY_REPO_PATH }}
       - name: Execute dependency-script
-        if: inputs.dependency-script != ''
+        if: inputs.dependency_script != ''
         run: |
-          SCRIPT_NAME=${{ env.TEMPORARY_REPO_PATH }}/${{ inputs.dependency-script }}
+          SCRIPT_NAME=${{ env.TEMPORARY_REPO_PATH }}/${{ inputs.dependency_script }}
           echo "Checking for ${SCRIPT_NAME}..."
           if [ -f "$SCRIPT_NAME" ]; then
             echo "Executing ${SCRIPT_NAME}"
