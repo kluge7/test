@@ -42,7 +42,7 @@ jobs:
   build:
     runs-on: ${{ inputs.os_name }}
     container:
-      image: ros:${{ inputs.ros_distro }}-ros-base  
+      image: ros:${{ inputs.ros_distro }}-ros-base
     env:
       TEMPORARY_REPO_PATH: repo
     steps:
