@@ -2,17 +2,7 @@
 
 ThrusterInterfaceAUVDriver::ThrusterInterfaceAUVDriver() {}
 
-ThrusterInterfaceAUVDriver::ThrusterInterfaceAUVDriver(
-    int I2C_BUS,
-    int PICO_I2C_ADDRESS,
-    double SYSTEM_OPERATIONAL_VOLTAGE,
-    const std::vector<int> &THRUSTER_MAPPING,
-    const std::vector<int> &THRUSTER_DIRECTION,
-    const std::vector<int> &THRUSTER_PWM_OFFSET,
-    const std::vector<int> &PWM_MIN,
-    const std::vector<int> &PWM_MAX,
-    const std::map<int, std::map<std::string, std::vector<double>>> &COEFFS) : I2C_BUS(I2C_BUS),
-                                                                               PICO_I2C_ADDRESS(PICO_I2C_ADDRESS),
+ThrusterInterfa                                                               PICO_I2C_ADDRESS(PICO_I2C_ADDRESS),
                                                                                // SYSTEM_OPERATIONAL_VOLTAGE(SYSTEM_OPERATIONAL_VOLTAGE), done after in the if-else
                                                                                THRUSTER_MAPPING(THRUSTER_MAPPING),
                                                                                THRUSTER_DIRECTION(THRUSTER_DIRECTION),
