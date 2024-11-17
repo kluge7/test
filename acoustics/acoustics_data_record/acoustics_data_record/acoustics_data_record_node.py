@@ -133,109 +133,88 @@ class AcousticsDataRecordNode(Node):
 
     # Callback methods for different topics
     def hydrophone1_callback(self, msg: Int32MultiArray) -> None:
-        """
-        Callback method for hydrophone1 topic.
+        """Callback method for hydrophone1 topic.
 
         Args:
             msg (Int32MultiArray): Message containing hydrophone1 data.
-
         """
         self.hydrophone1_data = msg.data
 
     def hydrophone2_callback(self, msg: Int32MultiArray) -> None:
-        """
-        Callback method for hydrophone2 topic.
+        """Callback method for hydrophone2 topic.
 
         Args:
             msg (Int32MultiArray): Message containing hydrophone2 data.
-
         """
         self.hydrophone2_data = msg.data
 
     def hydrophone3_callback(self, msg: Int32MultiArray) -> None:
-        """
-        Callback method for hydrophone3 topic.
+        """Callback method for hydrophone3 topic.
 
         Args:
             msg (Int32MultiArray): Message containing hydrophone3 data.
-
         """
         self.hydrophone3_data = msg.data
 
     def hydrophone4_callback(self, msg: Int32MultiArray) -> None:
-        """
-        Callback method for hydrophone4 topic.
+        """Callback method for hydrophone4 topic.
 
         Args:
             msg (Int32MultiArray): Message containing hydrophone4 data.
-
         """
         self.hydrophone4_data = msg.data
 
     def hydrophone5_callback(self, msg: Int32MultiArray) -> None:
-        """
-        Callback method for hydrophone5 topic.
+        """Callback method for hydrophone5 topic.
 
         Args:
             msg (Int32MultiArray): Message containing hydrophone5 data.
-
         """
         self.hydrophone5_data = msg.data
 
     def filter_response_callback(self, msg: Int32MultiArray) -> None:
-        """
-        Callback method for filter_response topic.
+        """Callback method for filter_response topic.
 
         Args:
             msg (Int32MultiArray): Message containing filter response data.
-
         """
         self.filter_response_data = msg.data
 
     def fft_callback(self, msg: Int32MultiArray) -> None:
-        """
-        Callback method for fft topic.
+        """Callback method for fft topic.
 
         Args:
             msg (Int32MultiArray): Message containing FFT data.
-
         """
         self.fft_data = msg.data
 
     def peaks_callback(self, msg: Int32MultiArray) -> None:
-        """
-        Callback method for peaks topic.
+        """Callback method for peaks topic.
 
         Args:
             msg (Int32MultiArray): Message containing peaks data.
-
         """
         self.peaks_data = msg.data
 
     def tdoa_callback(self, msg: Float32MultiArray) -> None:
-        """
-        Callback method for time_difference_of_arrival topic.
+        """Callback method for time_difference_of_arrival topic.
 
         Args:
             msg (Float32MultiArray): Message containing TDOA data.
-
         """
         self.tdoa_data = msg.data
 
     def position_callback(self, msg: Float32MultiArray) -> None:
-        """
-        Callback method for position topic.
+        """Callback method for position topic.
 
         Args:
             msg (Float32MultiArray): Message containing position data.
-
         """
         self.position_data = msg.data
 
     # The logger that logs all the data
     def logger(self) -> None:
-        """
-        Logs all the data to a CSV file using the AcousticsDataRecordLib.
+        """Logs all the data to a CSV file using the AcousticsDataRecordLib.
 
         This method is called periodically based on the data logging rate.
         """
@@ -254,8 +233,7 @@ class AcousticsDataRecordNode(Node):
 
 
 def main() -> None:
-    """
-    Main function to initialize and run the ROS2 node for acoustics data recording.
+    """Main function to initialize and run the ROS2 node for acoustics data recording.
 
     This function performs the following steps:
     1. Initializes the ROS2 communication.
@@ -266,7 +244,6 @@ def main() -> None:
 
     Returns:
         None
-
     """
     # Initialize ROS2
     rclpy.init()

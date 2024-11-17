@@ -38,18 +38,16 @@ class PowerSenseModule:
         self.psm_to_battery_current_offset = 0.330  # V
 
     def get_voltage(self) -> float:
-        """
-        Retrieves the voltage measurement from the Power Sense Module (PSM).
+        """Retrieves the voltage measurement from the Power Sense Module (PSM).
 
         This method reads the voltage from the PSM's voltage channel and multiplies
         it by the PSM-to-battery voltage conversion ratio to obtain the actual system
         voltage in volts.
 
-        Returns
-        -------
+        Returns:
+        --------
         float
             The system voltage in volts. If an error occurs during reading, returns 0.0.
-
         """
         # Sometimes an I/O timeout or error happens, it will run again when the error disappears
         try:
@@ -62,18 +60,16 @@ class PowerSenseModule:
             return 0.0
 
     def get_current(self) -> float:
-        """
-        Retrieves the current measurement from the Power Sense Module (PSM).
+        """Retrieves the current measurement from the Power Sense Module (PSM).
 
         This method reads the current from the PSM's current channel, adjusts it based on
         the PSM-to-battery current scale factor and offset, and returns the calculated
         current in amperes.
 
-        Returns
-        -------
+        Returns:
+        --------
         float
             The current value in amperes. If an error occurs during reading, returns 0.0.
-
         """
         try:
             system_current = (

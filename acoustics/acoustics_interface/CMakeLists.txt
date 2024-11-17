@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(acoustics_interface)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)

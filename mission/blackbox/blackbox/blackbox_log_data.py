@@ -58,8 +58,7 @@ class BlackBoxLogData:
     def manage_csv_files(
         self, max_file_age_in_days: int = 7, max_size_kb: int = 3_000_000
     ) -> None:
-        """
-        Manages CSV files in the blackbox data directory by deleting old files and ensuring the total size does not exceed a specified limit.
+        """Manages CSV files in the blackbox data directory by deleting old files and ensuring the total size does not exceed a specified limit.
 
         Args:
             max_file_age_in_days (int, optional): The maximum age of files in days before they are deleted. Defaults to 7 days.
@@ -75,7 +74,6 @@ class BlackBoxLogData:
             - The method first deletes files older than the specified number of days.
             - If the total size of remaining files exceeds the specified limit, it deletes the oldest files until the size is within the limit.
             - The expected filename format for the CSV files is "blackbox_data_YYYY-MM-DD_HH:MM:SS.csv".
-
         """
         # adjust the max size before you start deleting old files (1 000 000 kb = 1 000 mb = 1 gb)
         current_time = datetime.now()
@@ -187,6 +185,11 @@ class BlackBoxLogData:
         pwm_7: int = 0,
         pwm_8: int = 0,
     ) -> None:
+        """Logs the provided data to a CSV file.
+
+        This method appends a new row to the CSV file specified by `self.data_file_location`.
+        The row contains the current time and the provided data values.
+        """
         # Get current time in hours, minutes, seconds and milliseconds
         current_time = datetime.now().strftime("%H:%M:%S.%f")[:-3]
 
