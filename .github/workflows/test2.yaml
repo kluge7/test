@@ -34,5 +34,4 @@ jobs:
         env: # either pass all entries explicitly
           ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
           ROS_REPO: ${{ matrix.ROS_REPO }}
-        # with: # or pass the full matrix as config
-        #    config: ${{toJSON(matrix)}}
+          UPSTREAM_WORKSPACE: 'https://raw.githubusercontent.com/vortexntnu/vortex-auv/main/ros2.repos'
