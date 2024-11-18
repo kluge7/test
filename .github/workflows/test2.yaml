@@ -4,17 +4,33 @@
 name: CI 22 2 22
 
 on: # this determines when this workflow is run
-  push:
+  workflow_call:
+    inputs:
+      os:
+        description: "Operating System to run the workflow on"
+        required: false
+        default: "ubuntu-22.04"
+        type: string
+      ros_distro:
+        description: "List of ROS distributions to test (comma-separated)"
+        required: false
+        default: "humble"
+        type: string
+      ros_repo:
+        description: "List of ROS repositories to test (comma-separated)"
+        required: false
+        default: "testing,main"
+        type: string
 
 jobs:
   industrial_ci:
     name: ROS ${{ matrix.ROS_DISTRO }} (${{ matrix.ROS_REPO }})
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.os }}
     strategy:
       # fail-fast: false # uncomment if failing jobs should not cancel the others immediately
       matrix: # matrix is the product of entries
-        ROS_DISTRO: [humble]
-        ROS_REPO: [testing, main]
+        ROS_DISTRO: ${{ fromJson(inputs.ros_distro) }}
+        ROS_REPO: ${{ fromJson(inputs.ros_repo) }}
         # exclude: # specific configuration can be excludes
         #   - {ROS_DISTRO: melodic, ROS_REPO: testing}
     env:
