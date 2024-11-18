@@ -28,7 +28,11 @@ on:
         required: false
         default: false
         type: boolean
-
+      compiler_version:
+        description: "Compiler version (e.g., 11)"
+        required: true
+        default: "11"
+        type: string
 jobs:
   industrial_ci:
     name: ROS ${{ matrix.ROS_DISTRO }} (${{ matrix.ROS_REPO }})
@@ -40,6 +44,9 @@ jobs:
         ROS_REPO: ${{ fromJson(inputs.ros_repo) }}
     env:
       CCACHE_DIR: "${{ github.workspace }}/.ccache"
+      ADDITIONAL_DEBS: "gcc-${{ inputs.compiler_version }} g++-${{ inputs.compiler_version }}"
+      CC: "gcc-${{ inputs.compiler_version }}"
+      CXX: "g++-${{ inputs.compiler_version }}"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -53,5 +60,5 @@ jobs:
           ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
           ROS_REPO: ${{ matrix.ROS_REPO }}
           UPSTREAM_WORKSPACE: ${{ inputs.upstream_workspace }}
-          NOT_TEST_BUILD: 
+          NOT_TEST_BUILD: ${{ inputs.skip_tests }}
 
