@@ -15,4 +15,4 @@ jobs:
         env: 
           ROS_DISTRO: humble
           ROS_REPO: main
-          UPSTREAM_WORKSPACE: 'https://raw.githubusercontent.com/vortexntnu/vortex-auv/main/ros2.repos'
+          EXTERNAL_REPOS_URL: 'https://raw.githubusercontent.com/vortexntnu/vortex-auv/main/ros2.repos'
