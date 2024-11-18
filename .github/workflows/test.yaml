@@ -18,4 +18,4 @@ jobs:
           ROS_DISTRO: humble
           ROS_REPO: main
           UPSTREAM_WORKSPACE: 'https://raw.githubusercontent.com/vortexntnu/vortex-auv/main/ros2.repos'
-          BEFORE_INSTALL_TARGET_DEPENDENCIES: './requirements.sh'
+          BEFORE_INIT: './requirements.sh'
