@@ -62,4 +62,4 @@ jobs:
           ROS_REPO: ${{ matrix.ROS_REPO }}
           UPSTREAM_WORKSPACE: ${{ inputs.upstream_workspace }}
           NOT_TEST_BUILD: ${{ inputs.skip_tests }}
-          BEFORE_SCRIPT: "gcc --version && g++ --version"
+          BEFORE_INIT: "gcc --version && g++ --version"
