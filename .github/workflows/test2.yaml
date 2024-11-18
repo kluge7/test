@@ -1,4 +1,4 @@
-name: CI 22 2 22
+name: Industrial CI
 
 on:
   workflow_call:
@@ -17,6 +17,11 @@ on:
         description: "List of ROS repositories to test (JSON array)"
         required: false
         default: '["testing", "main"]'
+        type: string
+      upstream_workspace:
+        description: "URL to the upstream workspace file"
+        required: false
+        default: ""
         type: string
 
 jobs:
@@ -42,4 +47,6 @@ jobs:
         env:
           ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
           ROS_REPO: ${{ matrix.ROS_REPO }}
-          UPSTREAM_WORKSPACE: 'https://raw.githubusercontent.com/vortexntnu/vortex-auv/main/ros2.repos'
+          UPSTREAM_WORKSPACE: ${{ inputs.upstream_workspace }}
+          CLANG_TIDY: true
+
