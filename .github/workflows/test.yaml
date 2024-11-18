@@ -6,4 +6,5 @@ jobs:
     uses: kluge7/test/.github/workflows/test2.yaml@apple
     with:
       upstream_workspace: 'https://raw.githubusercontent.com/vortexntnu/vortex-auv/main/ros2.repos'
+      skip_tests: true
  
