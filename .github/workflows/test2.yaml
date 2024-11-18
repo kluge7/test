@@ -31,7 +31,7 @@ on:
       compiler_version:
         description: "Compiler version (e.g., 11)"
         required: false
-        default: "11"
+        default: "13"
         type: string
 jobs:
   industrial_ci:
