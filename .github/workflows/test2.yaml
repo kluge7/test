@@ -31,8 +31,9 @@ on:
       compiler_version:
         description: "Compiler version (e.g., 11)"
         required: false
-        default: "13"
+        default: "11"
         type: string
+
 jobs:
   industrial_ci:
     name: ROS ${{ matrix.ROS_DISTRO }} (${{ matrix.ROS_REPO }})
@@ -61,4 +62,4 @@ jobs:
           ROS_REPO: ${{ matrix.ROS_REPO }}
           UPSTREAM_WORKSPACE: ${{ inputs.upstream_workspace }}
           NOT_TEST_BUILD: ${{ inputs.skip_tests }}
-
+          BEFORE_SCRIPT: "gcc --version && g++ --version"
