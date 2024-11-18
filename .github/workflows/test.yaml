@@ -7,5 +7,5 @@ jobs:
     with:
       upstream_workspace: 'https://raw.githubusercontent.com/vortexntnu/vortex-auv/main/ros2.repos'
       skip_tests: true
-      before_install_target_dependencies: 'requirements.sh'
+      before_install_target_dependencies: './requirements.sh'
  
