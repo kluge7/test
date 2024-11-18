@@ -30,7 +30,7 @@ on:
         type: boolean
       compiler_version:
         description: "Compiler version (e.g., 11)"
-        required: true
+        required: false
         default: "11"
         type: string
 jobs:
