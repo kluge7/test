@@ -44,9 +44,7 @@ jobs:
         ROS_REPO: ${{ fromJson(inputs.ros_repo) }}
     env:
       CCACHE_DIR: "${{ github.workspace }}/.ccache"
-      BEFORE_INSTALL_TARGET_DEPENDENCIES: |
-        chmod +x ./requirements.sh
-        ./requirements.sh
+      BEFORE_INSTALL_TARGET_DEPENDENCIES: "bash ./requirements.sh"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
