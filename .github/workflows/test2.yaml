@@ -28,10 +28,10 @@ on:
         required: false
         default: false
         type: boolean
-      compiler_version:
-        description: "Compiler version (e.g., 11)"
+      before_install_target_dependencies:
+        description: "Command to run before installing target dependencies"
         required: false
-        default: "11"
+        default: ""
         type: string
 jobs:
   industrial_ci:
@@ -58,4 +58,5 @@ jobs:
           ROS_REPO: ${{ matrix.ROS_REPO }}
           UPSTREAM_WORKSPACE: ${{ inputs.upstream_workspace }}
           NOT_TEST_BUILD: ${{ inputs.skip_tests }}
+          BEFORE_INSTALL_TARGET_DEPENDENCIES: 
 
