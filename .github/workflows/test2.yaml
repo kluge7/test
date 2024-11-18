@@ -44,15 +44,17 @@ jobs:
         ROS_DISTRO: ${{ fromJson(inputs.ros_distro) }}
         ROS_REPO: ${{ fromJson(inputs.ros_repo) }}
     env:
-      CCACHE_DIR: "${{ github.workspace }}/.ccache"
       ADDITIONAL_DEBS: "gcc-${{ inputs.compiler_version }} g++-${{ inputs.compiler_version }}"
       CC: "gcc-${{ inputs.compiler_version }}"
       CXX: "g++-${{ inputs.compiler_version }}"
+      BEFORE_INIT: |
+        apt-get update && apt-get install -y gcc-${{ inputs.compiler_version }} g++-${{ inputs.compiler_version }}
+        gcc --version && g++ --version
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
         with:
-          path: ${{ env.CCACHE_DIR }}
+          path: ${{ github.workspace }}/.ccache
           key: ccache-${{ matrix.ROS_DISTRO }}-${{ matrix.ROS_REPO }}-${{ github.run_id }}
           restore-keys: |
             ccache-${{ matrix.ROS_DISTRO }}-${{ matrix.ROS_REPO }}-
@@ -62,4 +64,3 @@ jobs:
           ROS_REPO: ${{ matrix.ROS_REPO }}
           UPSTREAM_WORKSPACE: ${{ inputs.upstream_workspace }}
           NOT_TEST_BUILD: ${{ inputs.skip_tests }}
-          BEFORE_INIT: "gcc --version && g++ --version"
