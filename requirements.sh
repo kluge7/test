@@ -15,7 +15,6 @@ pip3 install --upgrade pip
 # Install Python packages with specified versions that are not handled by rosdep.
 # Specify versions using `==<version-number>` for consistent builds.
 # Example: `pip3 install <package-name>==<version>`
-pip3 install control==0.10.1
 pip3 install "numpy<1.25.0"
 
 echo "Finished installing extra dependencies."
