@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set execute permissions for requirements.sh
+        run: chmod +x requirements.sh
       - uses: 'ros-industrial/industrial_ci@master'
         env: 
           ROS_DISTRO: humble
