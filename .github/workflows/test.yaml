@@ -1,0 +1,11 @@
+name: Source Build
+# Build the ROS 2 workspace from source code and run tests
+on: [push]
+jobs:
+  call_reusable_workflow:
+    uses: kluge7/test/.github/workflows/test2.yaml@apple
+    with:
+      upstream_workspace: 'https://raw.githubusercontent.com/vortexntnu/vortex-auv/main/ros2.repos'
+      skip_tests: true
+      before_install_target_dependencies: './requirements.sh'
+ 

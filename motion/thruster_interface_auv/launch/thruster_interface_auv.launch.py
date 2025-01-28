@@ -6,8 +6,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description() -> LaunchDescription:
-    """
-    Generates a launch description for the thruster_interface_auv_node.
+    """Generates a launch description for the thruster_interface_auv_node.
 
     This function creates a ROS 2 launch description that includes the
     thruster_interface_auv_node. The node is configured to output to the screen
@@ -17,7 +16,6 @@ def generate_launch_description() -> LaunchDescription:
     Returns:
         LaunchDescription: A ROS 2 launch description containing the
         thruster_interface_auv_node.
-
     """
     thruster_interface_auv_node = Node(
         package="thruster_interface_auv",
@@ -31,12 +29,7 @@ def generate_launch_description() -> LaunchDescription:
                 "config",
                 "robots",
                 "orca.yaml",
-            ),
-            path.join(
-                get_package_share_directory("thruster_interface_auv"),
-                "config",
-                "coeffs.yaml",
-            ),
+            )
         ],
     )
     return LaunchDescription([thruster_interface_auv_node])

@@ -14,7 +14,6 @@ ament_python_install_package(thruster_interface_auv)
 install(DIRECTORY
   launch
   resources
-  config
   DESTINATION share/${PROJECT_NAME}
 )
 
