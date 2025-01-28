@@ -10,6 +10,7 @@ jobs:
     uses: vortexntnu/vortex-ci/.github/workflows/reusable-industrial-ci.yml@refactor/industrial-ci
     with:
       os: "ubuntu-latest"
+      upstream_workspace: './ros2.repos'
       # Optionally override other inputs like:
       # upstream_workspace: "https://raw.githubusercontent.com/..."
       # skip_tests: true
